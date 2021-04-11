@@ -1,11 +1,12 @@
-# Michael Madigan UDC PA  DA project 5April 2021
-# Michael Madigan UDC PA  DA project 5April 2021
+# Michael Madigan UDC PA  DA project 11April 2021
+
 
 # import useful libraries
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
+import datetime as dt
+import matplotlib.dates as md
 
 # read in csv file with world wide covid data
 # data downloaded from https://ourworldindata.org/coronavirus-source-data
@@ -176,54 +177,52 @@ new_cases_list=df_cases_County_cleaned['new_cases'].tolist()
 Value_list=df_cases_County_cleaned['VALUE'].tolist()
 date_list=df_cases_County_cleaned['date'].tolist()
 
-#plt.style.use('fivethirtyeight')
 
+print(date_list)
+#plt.style.use('fivethirtyeight')
 
 df_cases_County_cleaned.plot(kind='bar', x='date', y=['new_cases'])
 
-df_cases_County_cleaned.plot(kind='bar', x='date', y=['VALUE'],
-                       secondary_y=False)
+df_cases_County_cleaned.plot(kind='bar', x='date', y=['VALUE'])
 
-plt.savefig("Figure 1")
+# export plot to an image file
+plt.savefig("Figure-SLI data")
 
-plt.ylabel('Some numbers')
-plt.xlabel('Some dates')
-plt.title('Good Stuff Data')
+xfmt = md.DateFormatter('%Y-%m-%d %H:%M:%S')
+#plt.xaxis.set_major_formatter(xfmt)
 
-plt.annotate('Big spike in numbers', xy=(9000, 7500), xytext=(2500, 5000),
+#xtick_list = []
+#for tick in range(0, 400):
+#    if tick%30 == 0:
+#        xtick_list.append(tick)
+#print(f'tick_list= {xtick_list}')
+
+
+
+date_range = pd.date_range('2020-01-01', '2021-05-01', freq='MS')
+
+xtick_list = pd.to_datetime(date_range, format='%Y-%m-%d')
+########xtick_list = date_range
+###xtick_list = date_range.map(lambda t: t.strftime('%Y-%m-%d'))
+print('data_range = ', date_range)
+
+plt.xticks(rotation=45)
+plt.ylabel('% of people staying within their 5km boundary')
+plt.xlabel('Dates from 2020 through 2021')
+plt.title('Plot of % of people staying withing their 5km boundary')
+print('xticks-start')
+
+#plt.xticks([0, 10, 400])
+plt.xticks(xtick_list)
+plt.yticks([50, 55, 60, 65, 70, 75, 80])
+plt.ylim([50, 80])
+print(plt.xticks())
+print('xticks-end')
+
+plt.annotate('Big spike in numbers', xy=(100, 7500), xytext=(250, 5000),
              arrowprops=dict(facecolor='blue', shrink=0.05),
              )
 
-
-
-# setup data for plots
-t = date_list
-data1 = new_cases_list
-data2 = Value_list
-
-fig, ax1 = plt.subplots()
-
-#plt.legend()
-
-color = 'tab:red'
-ax1.set_xlabel('time (s)')
-ax1.set_ylabel('new cases reported', color=color)
-ax1.plot(t, data1, color=color)
-ax1.tick_params(axis='y', labelcolor=color)
-
-
-ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
-
-color = 'tab:blue'
-ax2.set_ylabel('SLI', color=color)  # we already handled the x-label with ax1
-#ax2.plot(t, data2, color=color)
-
-
-ax2.tick_params(axis='y', labelcolor=color)
-
-#plt.xlim([18400,  19000])
-ax1.set_title('New cases reported in Ireland')
-fig.tight_layout()  # otherwise the right y-label is slightly clipped
-
-
 plt.show()
+
+
