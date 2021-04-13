@@ -6,20 +6,20 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import datetime as dt
-import matplotlib.dates as md
+#import matplotlib.dates as md
 
 # read in csv file with world wide covid data
 # data downloaded from https://ourworldindata.org/coronavirus-source-data
 # import csv file into a Pandas DataFrame
 # Download data from site
-URL_Covid_dataset = r'https://covid.ourworldindata.org/data/owid-covid-data.csv'
-df1_from_web = pd.read_csv(URL_Covid_dataset)
-print('Inspection of web data head', df1_from_web.head())
-print('Inspection of web data tail', df1_from_web.head())
+#URL_Covid_dataset = r'https://covid.ourworldindata.org/data/owid-covid-data.csv'
+#df1_from_web = pd.read_csv(URL_Covid_dataset)
+#print('Inspection of web data head', df1_from_web.head())
+#print('Inspection of web data tail', df1_from_web.head())
 
 #Select data source - if offline then use local version
-df1 = df1_from_web   # use this data source when on-line
-#df1 = pd.read_csv("owid-covid-data.csv") # directly read a downloaded versin if web version is not available
+#df1 = df1_from_web   # use this data source when on-line
+df1 = pd.read_csv("owid-covid-data.csv") # directly read a downloaded version if web version is not available
 
 print(df1.head())   # view top lines of data
 print(df1.shape)    # check shape number of row and columns
@@ -34,41 +34,41 @@ for idx, column in enumerate(df1.columns):
 # Relevant columns are : 0 iso_code,  # 3 date,  # 5 new_cases
 
 selected_cols = ['iso_code', 'date', 'new_cases']
-df_web = pd.read_csv(URL_Covid_dataset, usecols=selected_cols)
+#df_web = pd.read_csv(URL_Covid_dataset, usecols=selected_cols)
 
 # from the list gathered the required columns - separate columns ino a new dataframe
 # this drops the unneeded columns
 selected_cols = ['iso_code', 'date', 'new_cases']
 df_iso_date_new_cases = df1.loc[:, selected_cols] # using the .loc function
 
-print("Line 33 header of new dataframe with only three necessary columns")
+print("Line 44 header of new dataframe with only three necessary columns")
 print(df_iso_date_new_cases.head())
 
-print("Line 36 data types of new df1")
+print("Line 47 data types of new df1")
 print(df_iso_date_new_cases.dtypes)
 # from this we see that the "date" column is an object, this should be changed to a date field
 
 # set the date column to a date format using .to_date() function
 # set date format to YMD.
-#df_iso_date_new_cases['date'] = pd.to_datetime(df_iso_date_new_cases['date'], yearfirst=True, format="%d/%m/%Y")
-df_iso_date_new_cases['date'] = pd.to_datetime(df_iso_date_new_cases['date'], yearfirst=True, format="%Y/%m/%d")
+df_iso_date_new_cases['date'] = pd.to_datetime(df_iso_date_new_cases['date'], yearfirst=True, format="%d/%m/%Y")
+#df_iso_date_new_cases['date'] = pd.to_datetime(df_iso_date_new_cases['date'], yearfirst=True, format="%Y/%m/%d")
 
-print("Line 43 tail of new df1 with date column format set to date YMD ")
+print("Line 56 tail of new df1 with date column format set to date YMD ")
 print(df_iso_date_new_cases.tail())
 
 #Check data for NaN
 count_NaN = df_iso_date_new_cases[selected_cols].isna().sum()
-print("line 48 Count of NaNs in df_iso_date_new_cases dataframe ")
+print("line 61 Count of NaNs in df_iso_date_new_cases dataframe ")
 print(count_NaN)
 
-# from the Nan count we see 1576 NaN's in the new_cases column. we need to
+# from the Nan count we see quantity of NaN's in the new_cases column. we need to
 # clean the NaN's and replace with zeros.
 df_iso_date_new_cases_no_NaN = df_iso_date_new_cases.fillna(0)
 
 
 #Repeated Check data for NaN to ensure fillna worked as planned
 count_NaN = df_iso_date_new_cases_no_NaN[selected_cols].isna().sum()
-print("Line 58 Count of NaNs removed in df_iso_date_new_cases dataframe ")
+print("Line 71 Count of NaNs removed in df_iso_date_new_cases dataframe ")
 print(count_NaN)
 
 # Select only the rows that pertain to ireland, ISO code = IRL
@@ -81,9 +81,9 @@ print(df_IRL.shape)
 df_IRL.to_csv(r'export_dataframe_df_IRL.csv', index=False, header=True)
 
 #=========================================================================
-print("=====================================================")
-print("=======Start process again for another dataset ======")
-print("=====================================================")
+print("===============================================================")
+print("=======Start process again for another different dataset ======")
+print("===============================================================")
 #=========================================================================
 
 # read and clean a second file
@@ -91,12 +91,13 @@ print("=====================================================")
 # use phone GPS data to determine people movement
 # file name is Staying Local Indicator SLI01.20210330T200311.csv
 
-# read in csv file with world wide covid data
-df_SLI = pd.read_csv("Staying Local Indicator SLI01.20210403T220407-2.csv")
+# read in csv file with staying local data
+#df_SLI = pd.read_csv("Staying Local Indicator SLI01.20210403T220407-2.csv")
+df_SLI = pd.read_csv("SLI01-20210413T150429.csv")
 
-print(df_SLI.head())   # view top lines of data
-print(df_SLI.shape)   # check shape number of row and columns
-print(df_SLI.dtypes)   # check data types
+print('df_SLI head = ', df_SLI.head())   # view top lines of data
+print('df_SLI shape = ', df_SLI.shape)   # check shape number of row and columns
+print('df_SLI dtypes = ', df_SLI.dtypes)   # check data types
 
 
 # get all column names
@@ -104,10 +105,11 @@ for idx, column in enumerate(df_SLI.columns):
     print(idx,column)
 # from the column information we see that columns which columns to extract
 #0 Statistic
-#1 Date
+#2 Date
 #2 County
 #3 UNIT
 #4 VALUE
+#5 Date2
 
 required_cols = ['Date', 'County', 'VALUE']
 df_SLI_Date_County_Value = df_SLI.loc[:, required_cols]
@@ -117,48 +119,113 @@ print(df_SLI_Date_County_Value.head())
 
 #Check data for NaN
 count_NaN = df_SLI_Date_County_Value[required_cols].isna().sum()
-print("Line 97 Count of NaNs in df_iso_date_new_cases dataframe ")
+print("Line 121 Count of NaNs in df_iso_date_new_cases dataframe ")
 print(count_NaN)
 
-# from the Nan count we fill nan's
+#initially just removed NaN with zero however a few missing plot points dropped to zero
+# better to interpolate as only a few few small quantity of NaN's
+df_SLI_Date_County_Value = df_SLI_Date_County_Value.interpolate(axis=0)
+
+# from the Nan count we fill nan's - not required use interpolation
 df_SLI_Date_County_Value_No_NaN = df_SLI_Date_County_Value.fillna(0)
 
 #Repeated Check data for NaN to ensure fillna worked as planned
 count_NaN = df_SLI_Date_County_Value_No_NaN[required_cols].isna().sum()
-print("Line 115 Count of NaNs removed in df_iso_date_new_cases dataframe ")
-print(count_NaN)
+print("Line 129 Count of NaNs removed in df_iso_date_new_cases dataframe ")
+print('df_SLI_Date_County_Value_No_NaN = count_NaN = ', count_NaN)
 
 
 
-print("Line 120 data frame cleaned for State" )
+print("Line 134 data frame cleaned for State" )
 print(df_SLI_Date_County_Value_No_NaN.head())
-print("Line 122 check shape of data frame for Ireland to ensure reasonable data" )
+print("Line 136 check shape of data frame for Ireland to ensure reasonable data" )
 print(df_SLI_Date_County_Value_No_NaN.shape)
 
 # set the date column to a date format
 #df_SLI_State.loc[:, ['Date']] = pd.to_datetime(df_SLI_State.loc[:, ['Date']], format='%Y/%m/%d')
-df_SLI_Date_County_Value_No_NaN['Date'] = pd.to_datetime(df_SLI_Date_County_Value_No_NaN.loc[:, 'Date'])
+df_SLI_Date_County_Value_No_NaN['New_Date'] = pd.to_datetime(df_SLI_Date_County_Value_No_NaN['Date'], format="%Y %B %d")
+#df_SLI_Date_County_Value_No_NaN['New_Date2'] = pd.to_datetime(df_SLI_Date_County_Value_No_NaN['Date'], format="%Y %B %d")
+
 
 # Select only the rows that pertain to all ireland i.e. State, County = State
 df_SLI_state = df_SLI_Date_County_Value_No_NaN.loc[df_SLI_Date_County_Value_No_NaN["County"] == 'State', :]
 
-df_SLI_state.sort_index()
+
+#df_SLI_state.sort_index()
 
 df_SLI_state.to_csv(r'export_dataframe_df_SLI_state.csv', index=False, header=True)
 
 #===================================================================================
 #
-#                        MERGE SECTION
+# Read in a third file
+#
+# read in csv file with
+# file from Irish gov web site https://data.cso.ie/
+# Persons on the Live Register, in receipt of the Pandemic Unemployment Payment,
+# in receipt of the Temporary Wage Subsidy Scheme and Total excluding overlaps.
 #
 #===================================================================================
 
+df_pup = pd.read_csv("LRW01.20210413T150452.csv")
+print('df_pup head = ', df_pup.head())   # view top lines of data
+print('df_pup shape = ', df_pup.shape)   # check shape number of row and columns
+print('df_pup dtypes = ', df_pup.dtypes)   # check data types
+
+# convert YYYYWww to the Monday the starting date on the week.
+# This will allow comparison woth other data sets
+# expand the YYYYWww to YYYYWww-dd by adding a -1
+df_pup['first_Monday'] = df_pup['Week'] + '-1'
+#convert the first_Monday string to a date
+df_pup['first_Monday_date'] = pd.to_datetime(df_pup['first_Monday'], yearfirst=True, format="%YW%W-%w")
+# export file for inspection - only required during debugging
+df_pup.to_csv(r'export_df_pup.csv', index=False, header=True)
+# print header to inspect
+print('df_pup head = ', df_pup.head())   # view top lines of data
+
+# clean data in pup dataframe
+# select the required columns
+required_cols = ['Statistic', 'Age Group', 'Sex', 'VALUE', 'first_Monday_date']
+
+df_pup1 = df_pup.loc[:, required_cols]
+
+print('\n df_pup1 head = \n', df_pup1.head())   # view top lines of data
+
+# Select only the relevant rows
+df_pup1 = df_pup1.loc[df_pup1["Statistic"] == 'Persons in receipt of the Pandemic Unemployment Payment', :]
+df_pup1 = df_pup1.loc[df_pup1["Age Group"] == 'All ages', :]
+df_pup1 = df_pup1.loc[df_pup1["Sex"] == 'Both sexes', :]
+
+print('\n df_pup1 head = \n', df_pup1.head())   # view top lines of data
+
+
+# reduce data further
+required_cols = ['Statistic', 'VALUE', 'first_Monday_date']
+df_pup1 = df_pup1.loc[:, required_cols]
+
+# export file for inspection - only required during debugging
+df_pup1.to_csv(r'export_df_pup1.csv', index=False, header=True)
+
+#Check data for NaN
+print('\n check for Nan in df_pup1 = \n ', df_pup1[required_cols].isna().sum(), '\n')
+
+
+
+
+#===================================================================================
+#
+#
+#                        MERGE SECTION
+#
+#
+#===================================================================================
+print('df_IRL dtypes = ', df_IRL.dtypes)
+print('df_SLI_state dtypes = ', df_SLI_state.dtypes)
 
 # merge the new_cases and SLI dataframes
-df_cases_County = pd.merge(df_IRL, df_SLI_state, left_on='date', right_on='Date', how='left')
+df_cases_County = pd.merge(df_IRL, df_SLI_state, left_on='date', right_on='New_Date', how='left')
 
-print("Line 146 merged df header / shape")
-print(df_cases_County.head())
-print(df_cases_County.shape)
+print('\n df_cases_County head = ', df_cases_County.head())
+print('\n df_cases_County shape = ', df_cases_County.shape)
 
 
 required_cols = ['date', 'Date', 'County', 'VALUE', 'new_cases']
@@ -172,20 +239,35 @@ date_cols = ['date']
 #df_cases_County_cleaned = (df_cases_County_2[(df_cases_County_2[date_cols] != 0).all(axis=1)]).sort_values('date')
 # remove any 'date' filed that are zero
 df_cases_County_cleaned = (df_cases_County_2[(df_cases_County_2[date_cols] != 0).all(axis=1)])
-# add a new column just date for later plotting without the time values
+
+# add a new column just date for later plotting without the time values - just_date
 df_cases_County_cleaned['just_date'] = df_cases_County_cleaned['date'].dt.date
 
-print(df_cases_County_cleaned.head())
-print(df_cases_County_cleaned.tail())
+print('df_cases_County_cleaned head = ', df_cases_County_cleaned.head())
+print('df_cases_County_cleaned tail = ', df_cases_County_cleaned.tail())
 
-
-
-
-
-df_cases_County_cleaned.to_csv(r'df_cases_County_cleaned.csv', index=False, header=True)
-
+# save files for debugging
+df_cases_County_cleaned.to_csv(r'export_df_cases_County_cleaned.csv', index=False, header=True)
 df_cases_County_2.to_csv(r'export_dataframe_merge.csv', index=False, header=True)
 
+#=============================================================================
+#  Second merge
+#=============================================================================
+# merge the new_cases and pup dataframes
+df_cases_pup1 = pd.merge(df_IRL, df_pup1, left_on='date', right_on='first_Monday_date', how='left')
+
+
+# as the pup df is missing many data points between dates interpolate to construct
+# a clearer picture of the trend
+
+df_cases_pup1.to_csv(r'export_df_cases_pup1.csv', index=False, header=True)
+df_pup2 = df_cases_pup1.interpolate(axis=0)
+df_pup2.to_csv(r'export_df_pup2.csv', index=False, header=True)
+
+print('\n df_cases_pup1 head = ', df_cases_pup1.head())
+print('\n df_cases_pup1 shape = ', df_cases_pup1.shape)
+# save files for debugging
+df_cases_pup1.to_csv(r'export_df_cases_pup1.csv', index=False, header=True)
 
 #===================================================================================
 #
@@ -198,20 +280,10 @@ new_cases_list = df_cases_County_cleaned['new_cases'].tolist()
 Value_list = df_cases_County_cleaned['VALUE'].tolist()
 date_list = df_cases_County_cleaned['just_date'].tolist()
 
+pup_date_list = df_pup2['date'].tolist()
+pup_VALUE_list = df_pup2['VALUE'].tolist()
 
 date_list2 = []
-
-#for ts in date_list:
-#    days1 = (ts - pd.Timestamp(0)).days
-#    date_list2.append(days1)
-#    #print(date_list2)
-
-
-#print(date_list)
-#plt.style.use('fivethirtyeight')
-
-#df_cases_County_cleaned.plot(kind='bar', x='date', y=['new_cases'])
-#df_cases_County_cleaned.plot(kind='bar', x='date', y=['VALUE'])
 
 # export plot to an image file
 # plt.savefig("Figure-SLI data")
@@ -238,7 +310,7 @@ fig, ax1 = plt.subplots(1, 1, figsize=(10, 5))
 
 #ax1.plot(date_list, new_cases_list, label="ax1 new cases list label", color = 'blue', lw=1)
 #ax1.set_xticklabels(df_cases_County_clea
-# ned.index.format(), rotation='vertical', size=6)
+
 #ax1.locator_params(axis='x', nbins=20)
 #ax1.set_bins
 ax1.set_title("ax1 Plot")
@@ -247,11 +319,23 @@ ax1.set_ylabel("ax1 y label yyyyy")
 #ax1.marker ='x'
 
 ax1.plot(date_list, new_cases_list, color='tab:blue', label="new cases")
-ax1.plot(date_list, Value_list, color='tab:orange', label="Staying local")
 
-secax1 = ax1.secondary_yaxis('right')
-secax1.set_ylabel('secondary y label')
-secax1.set_ylim(0, 100)
+ax1a = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+
+ax1a.plot(date_list, Value_list, color='tab:orange', label="Staying local")
+
+#ax1a = ax1.secondary_yaxis('right')
+ax1a.set_ylabel('secondary y label')
+ax1a.set_ylim(0, 100)
+
+ax1b = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+ax1b.plot(pup_date_list, pup_VALUE_list, color='tab:red', label="new cases")
+ax1b.set_ylabel('secondary y label')
+#ax1b.set_ylim(0, 100)
+
+
+#ax.set_ylim([cur_ylim[0], 1])
+
 
 #ax1.secondary_yaxis.set_ylim(1,100)
 
@@ -260,7 +344,9 @@ ax1.annotate('S',  xytext=(10, 10),xy=(300, 500),
              )
 ax1.legend(loc='upper left')  #improve performance by instructing legend location
 
-#ax2 = plt.subplots(2,1)
+
+
+ax2 = plt.subplots(2,1)
 ax2 = df_cases_County_cleaned.plot(kind='bar', x='date', y='VALUE')
 ax2.set_xticklabels(df_cases_County_cleaned.index.format(), rotation='vertical', size=6)
 ax2.locator_params(axis='x', nbins=20)
@@ -269,4 +355,12 @@ ax2.set_xlabel("ax2 x label xxxxx")
 ax2.set_ylabel("ax2 y label yyyyy")
 
 
+fig, ax3 = plt.subplots(1, 1, figsize=(10, 5))
+ax3.plot(pup_date_list, pup_VALUE_list, color='tab:blue', label="new cases")
+
+
 plt.show()
+
+
+
+

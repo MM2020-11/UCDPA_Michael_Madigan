@@ -1,4 +1,4 @@
-Statistic,Date2,County,UNIT,VALUE,Date
+Statistic,Date,County,UNIT,VALUE,Date2
 Staying Local Indicator,2020 February 24,State,%,57.5,24/02/2020
 Staying Local Indicator,2020 February 24,Cavan,%,49.2,24/02/2020
 Staying Local Indicator,2020 February 24,Donegal,%,49.2,24/02/2020
@@ -2537,33 +2537,33 @@ Staying Local Indicator,2020 May 27,Cork,%,65.6,27/05/2020
 Staying Local Indicator,2020 May 27,Galway,%,59.4,27/05/2020
 Staying Local Indicator,2020 May 27,Limerick,%,64.4,27/05/2020
 Staying Local Indicator,2020 May 27,Waterford,%,65.4,27/05/2020
-Staying Local Indicator,2020 May 28,State,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Cavan,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Donegal,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Leitrim,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Louth,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Monaghan,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Sligo,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Laois,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Longford,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Offaly,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Westmeath,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Mayo,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Roscommon,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Dublin,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Kildare,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Meath,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Wicklow,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Clare,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Carlow,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Kilkenny,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Tipperary,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Wexford,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Kerry,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Cork,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Galway,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Limerick,%,,28/05/2020
-Staying Local Indicator,2020 May 28,Waterford,%,,28/05/2020
+Staying Local Indicator,2020 May 28,State,%,67.1,28/05/2020
+Staying Local Indicator,2020 May 28,Cavan,%,57.9,28/05/2020
+Staying Local Indicator,2020 May 28,Donegal,%,56,28/05/2020
+Staying Local Indicator,2020 May 28,Leitrim,%,54.2,28/05/2020
+Staying Local Indicator,2020 May 28,Louth,%,67.9,28/05/2020
+Staying Local Indicator,2020 May 28,Monaghan,%,58.6,28/05/2020
+Staying Local Indicator,2020 May 28,Sligo,%,56.4,28/05/2020
+Staying Local Indicator,2020 May 28,Laois,%,58.3,28/05/2020
+Staying Local Indicator,2020 May 28,Longford,%,58.6,28/05/2020
+Staying Local Indicator,2020 May 28,Offaly,%,57.7,28/05/2020
+Staying Local Indicator,2020 May 28,Westmeath,%,65.4,28/05/2020
+Staying Local Indicator,2020 May 28,Mayo,%,52.5,28/05/2020
+Staying Local Indicator,2020 May 28,Roscommon,%,54.6,28/05/2020
+Staying Local Indicator,2020 May 28,Dublin,%,81.5,28/05/2020
+Staying Local Indicator,2020 May 28,Kildare,%,65.6,28/05/2020
+Staying Local Indicator,2020 May 28,Meath,%,65.4,28/05/2020
+Staying Local Indicator,2020 May 28,Wicklow,%,68,28/05/2020
+Staying Local Indicator,2020 May 28,Clare,%,58.8,28/05/2020
+Staying Local Indicator,2020 May 28,Carlow,%,50.2,28/05/2020
+Staying Local Indicator,2020 May 28,Kilkenny,%,61.3,28/05/2020
+Staying Local Indicator,2020 May 28,Tipperary,%,55,28/05/2020
+Staying Local Indicator,2020 May 28,Wexford,%,60.9,28/05/2020
+Staying Local Indicator,2020 May 28,Kerry,%,58.4,28/05/2020
+Staying Local Indicator,2020 May 28,Cork,%,65.6,28/05/2020
+Staying Local Indicator,2020 May 28,Galway,%,59.4,28/05/2020
+Staying Local Indicator,2020 May 28,Limerick,%,64.4,28/05/2020
+Staying Local Indicator,2020 May 28,Waterford,%,65.4,28/05/2020
 Staying Local Indicator,2020 May 29,State,%,66.5,29/05/2020
 Staying Local Indicator,2020 May 29,Cavan,%,57.3,29/05/2020
 Staying Local Indicator,2020 May 29,Donegal,%,55.2,29/05/2020
@@ -8099,33 +8099,33 @@ Staying Local Indicator,2020 December 19,Cork,%,52.5,19/12/2020
 Staying Local Indicator,2020 December 19,Galway,%,48.9,19/12/2020
 Staying Local Indicator,2020 December 19,Limerick,%,51.9,19/12/2020
 Staying Local Indicator,2020 December 19,Waterford,%,53.8,19/12/2020
-Staying Local Indicator,2020 December20,State,%,53.2,20-Dec-20
-Staying Local Indicator,2020 December20,Cavan,%,44,20-Dec-20
-Staying Local Indicator,2020 December20,Donegal,%,43.9,20-Dec-20
-Staying Local Indicator,2020 December20,Leitrim,%,42,20-Dec-20
-Staying Local Indicator,2020 December20,Louth,%,55.5,20-Dec-20
-Staying Local Indicator,2020 December20,Monaghan,%,46.1,20-Dec-20
-Staying Local Indicator,2020 December20,Sligo,%,44.8,20-Dec-20
-Staying Local Indicator,2020 December20,Laois,%,44.3,20-Dec-20
-Staying Local Indicator,2020 December20,Longford,%,44.9,20-Dec-20
-Staying Local Indicator,2020 December20,Offaly,%,45.5,20-Dec-20
-Staying Local Indicator,2020 December20,Westmeath,%,49.7,20-Dec-20
-Staying Local Indicator,2020 December20,Mayo,%,42.1,20-Dec-20
-Staying Local Indicator,2020 December20,Roscommon,%,41.1,20-Dec-20
-Staying Local Indicator,2020 December20,Dublin,%,67,20-Dec-20
-Staying Local Indicator,2020 December20,Kildare,%,47.1,20-Dec-20
-Staying Local Indicator,2020 December20,Meath,%,47.8,20-Dec-20
-Staying Local Indicator,2020 December20,Wicklow,%,50.2,20-Dec-20
-Staying Local Indicator,2020 December20,Clare,%,45.5,20-Dec-20
-Staying Local Indicator,2020 December20,Carlow,%,43,20-Dec-20
-Staying Local Indicator,2020 December20,Kilkenny,%,46.9,20-Dec-20
-Staying Local Indicator,2020 December20,Tipperary,%,42.1,20-Dec-20
-Staying Local Indicator,2020 December20,Wexford,%,46.5,20-Dec-20
-Staying Local Indicator,2020 December20,Kerry,%,47.8,20-Dec-20
-Staying Local Indicator,2020 December20,Cork,%,51.8,20-Dec-20
-Staying Local Indicator,2020 December20,Galway,%,48.2,20-Dec-20
-Staying Local Indicator,2020 December20,Limerick,%,51.2,20-Dec-20
-Staying Local Indicator,2020 December20,Waterford,%,52.8,20-Dec-20
+Staying Local Indicator,2020 December20,State,%,53.2,20/12/2020
+Staying Local Indicator,2020 December20,Cavan,%,44,20/12/2020
+Staying Local Indicator,2020 December20,Donegal,%,43.9,20/12/2020
+Staying Local Indicator,2020 December20,Leitrim,%,42,20/12/2020
+Staying Local Indicator,2020 December20,Louth,%,55.5,20/12/2020
+Staying Local Indicator,2020 December20,Monaghan,%,46.1,20/12/2020
+Staying Local Indicator,2020 December20,Sligo,%,44.8,20/12/2020
+Staying Local Indicator,2020 December20,Laois,%,44.3,20/12/2020
+Staying Local Indicator,2020 December20,Longford,%,44.9,20/12/2020
+Staying Local Indicator,2020 December20,Offaly,%,45.5,20/12/2020
+Staying Local Indicator,2020 December20,Westmeath,%,49.7,20/12/2020
+Staying Local Indicator,2020 December20,Mayo,%,42.1,20/12/2020
+Staying Local Indicator,2020 December20,Roscommon,%,41.1,20/12/2020
+Staying Local Indicator,2020 December20,Dublin,%,67,20/12/2020
+Staying Local Indicator,2020 December20,Kildare,%,47.1,20/12/2020
+Staying Local Indicator,2020 December20,Meath,%,47.8,20/12/2020
+Staying Local Indicator,2020 December20,Wicklow,%,50.2,20/12/2020
+Staying Local Indicator,2020 December20,Clare,%,45.5,20/12/2020
+Staying Local Indicator,2020 December20,Carlow,%,43,20/12/2020
+Staying Local Indicator,2020 December20,Kilkenny,%,46.9,20/12/2020
+Staying Local Indicator,2020 December20,Tipperary,%,42.1,20/12/2020
+Staying Local Indicator,2020 December20,Wexford,%,46.5,20/12/2020
+Staying Local Indicator,2020 December20,Kerry,%,47.8,20/12/2020
+Staying Local Indicator,2020 December20,Cork,%,51.8,20/12/2020
+Staying Local Indicator,2020 December20,Galway,%,48.2,20/12/2020
+Staying Local Indicator,2020 December20,Limerick,%,51.2,20/12/2020
+Staying Local Indicator,2020 December20,Waterford,%,52.8,20/12/2020
 Staying Local Indicator,2020 December 21,State,%,52.8,21/12/2020
 Staying Local Indicator,2020 December 21,Cavan,%,43.8,21/12/2020
 Staying Local Indicator,2020 December 21,Donegal,%,43.7,21/12/2020
