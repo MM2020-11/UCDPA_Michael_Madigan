@@ -4,6 +4,8 @@
 # import useful libraries
 import pandas as pd
 import matplotlib.pyplot as plt
+import json
+
 import numpy as np
 import datetime as dt
 #import matplotlib.dates as md
@@ -90,20 +92,26 @@ print("===============================================================")
 # the file is collected by the Irish government and a mobile phone company
 # use phone GPS data to determine people movement
 # file name is Staying Local Indicator SLI01.20210330T200311.csv
+#https://ws.cso.ie/public/api.jsonrpc?data=%7B%22jsonrpc%22:%222.0%22,%22method%22:%22PxStat.Data.Cube_API.ReadDataset%22,%22params%22:%7B%22class%22:%22query%22,%22id%22:%5B%5D,%22dimension%22:%7B%7D,%22extension%22:%7B%22pivot%22:null,%22codes%22:false,%22language%22:%7B%22code%22:%22en%22%7D,%22format%22:%7B%22type%22:%22JSON-stat%22,%22version%22:%222.0%22%7D,%22matrix%22:%22SLI01%22%7D,%22version%22:%222.0%22%7D%7D
 
-# read in csv file with staying local data
-#df_SLI = pd.read_csv("Staying Local Indicator SLI01.20210403T220407-2.csv")
-df_SLI = pd.read_csv("SLI01-20210413T150429.csv")
+#read in csv file with staying local data ( in event internet not available )
+df_SLI = pd.read_csv("SLI01.20210415T090423.csv")
+
+#required_cols = ['Date', 'County', 'VALUE']
+#URL_SLI_dataset = 'https://ws.cso.ie/public/api.jsonrpc?data=%7B%22jsonrpc%22:%222.0%22,%22method%22:%22PxStat.Data.Cube_API.ReadDataset%22,%22params%22:%7B%22class%22:%22query%22,%22id%22:%5B%5D,%22dimension%22:%7B%7D,%22extension%22:%7B%22pivot%22:null,%22codes%22:false,%22language%22:%7B%22code%22:%22en%22%7D,%22format%22:%7B%22type%22:%22JSON-stat%22,%22version%22:%222.0%22%7D,%22matrix%22:%22SLI01%22%7D,%22version%22:%222.0%22%7D%7D'
+#df_SLI = pd.read_json(URL_SLI_dataset)
+#df_SLI = pd.json_normalize(df_SLI)
+#df_SLI.to_csv(r'export_df_SLI_json.csv', index=False, header=True)
+
 
 print('df_SLI head = ', df_SLI.head())   # view top lines of data
 print('df_SLI shape = ', df_SLI.shape)   # check shape number of row and columns
 print('df_SLI dtypes = ', df_SLI.dtypes)   # check data types
 
-
 # get all column names
 for idx, column in enumerate(df_SLI.columns):
     print(idx,column)
-# from the column information we see that columns which columns to extract
+# from the column information we see which columns are relevant
 #0 Statistic
 #2 Date
 #2 County
@@ -114,13 +122,17 @@ for idx, column in enumerate(df_SLI.columns):
 required_cols = ['Date', 'County', 'VALUE']
 df_SLI_Date_County_Value = df_SLI.loc[:, required_cols]
 
+# during debuggibg found and clean an error in date format for 20Dec20
+# data cleaned here
+df_SLI_Date_County_Value['Date'] = df_SLI_Date_County_Value['Date'].str.replace('2020 December20', '2020 December 20')
+
 print("Line 102 header of new dataframe with only three necessary columns")
 print(df_SLI_Date_County_Value.head())
 
 #Check data for NaN
 count_NaN = df_SLI_Date_County_Value[required_cols].isna().sum()
 print("Line 121 Count of NaNs in df_iso_date_new_cases dataframe ")
-print(count_NaN)
+print("\n count_NaN in SLI df =\n", count_NaN, '\n')
 
 #initially just removed NaN with zero however a few missing plot points dropped to zero
 # better to interpolate as only a few few small quantity of NaN's
@@ -143,6 +155,8 @@ print(df_SLI_Date_County_Value_No_NaN.shape)
 
 # set the date column to a date format
 #df_SLI_State.loc[:, ['Date']] = pd.to_datetime(df_SLI_State.loc[:, ['Date']], format='%Y/%m/%d')
+# note on debugging noticed a date field format error
+# normal format is yyyy space Month space day, however data has
 df_SLI_Date_County_Value_No_NaN['New_Date'] = pd.to_datetime(df_SLI_Date_County_Value_No_NaN['Date'], format="%Y %B %d")
 #df_SLI_Date_County_Value_No_NaN['New_Date2'] = pd.to_datetime(df_SLI_Date_County_Value_No_NaN['Date'], format="%Y %B %d")
 
@@ -210,11 +224,10 @@ print('\n check for Nan in df_pup1 = \n ', df_pup1[required_cols].isna().sum(), 
 
 
 
-
 #===================================================================================
 #
 #
-#                        MERGE SECTION
+#                        MERGE SECTION - First
 #
 #
 #===================================================================================
@@ -250,12 +263,19 @@ print('df_cases_County_cleaned tail = ', df_cases_County_cleaned.tail())
 df_cases_County_cleaned.to_csv(r'export_df_cases_County_cleaned.csv', index=False, header=True)
 df_cases_County_2.to_csv(r'export_dataframe_merge.csv', index=False, header=True)
 
-#=============================================================================
-#  Second merge
-#=============================================================================
+correlation = df_cases_County_2['VALUE'].corr( df_cases_County_2['new_cases'], method='pearson')
+print('\n coor1 = ', correlation)
+
+#===================================================================================
+#
+#
+#                        MERGE SECTION - Second
+#
+#
+#===================================================================================
 # merge the new_cases and pup dataframes
 df_cases_pup1 = pd.merge(df_IRL, df_pup1, left_on='date', right_on='first_Monday_date', how='left')
-
+df_cases_pup1 = df_cases_pup1.drop(labels=[0], axis=0)
 
 # as the pup df is missing many data points between dates interpolate to construct
 # a clearer picture of the trend
@@ -268,6 +288,10 @@ print('\n df_cases_pup1 head = ', df_cases_pup1.head())
 print('\n df_cases_pup1 shape = ', df_cases_pup1.shape)
 # save files for debugging
 df_cases_pup1.to_csv(r'export_df_cases_pup1.csv', index=False, header=True)
+
+
+correlation = df_pup2['VALUE'].corr( df_pup2['new_cases'],method='pearson')
+print('\n coor2 = ', correlation )
 
 #===================================================================================
 #
@@ -283,13 +307,9 @@ date_list = df_cases_County_cleaned['just_date'].tolist()
 pup_date_list = df_pup2['date'].tolist()
 pup_VALUE_list = df_pup2['VALUE'].tolist()
 
-date_list2 = []
-
 # export plot to an image file
 # plt.savefig("Figure-SLI data")
 
-#xfmt = md.DateFormatter('%Y-%m-%d %H:%M:%S')
-#plt.xaxis.set_major_formatter(xfmt)
 
 xtick_list = []
 for tick in range(0, 403):
@@ -301,52 +321,53 @@ date_range = pd.date_range('2020-01-01', '2021-06-01', freq='MS')
 
 #xtick_list = pd.to_datetime(date_range, format='%Y-%m-%d')
 
-########xtick_list = date_range
-test = date_range.map(lambda t: t.strftime('%Y-%m-%d'))
-print('data_range = ', test)
 
-
-fig, ax1 = plt.subplots(1, 1, figsize=(10, 5))
+fig, ax1 = plt.subplots(1,1, figsize=(10, 5))
 
 #ax1.plot(date_list, new_cases_list, label="ax1 new cases list label", color = 'blue', lw=1)
 #ax1.set_xticklabels(df_cases_County_clea
 
-#ax1.locator_params(axis='x', nbins=20)
-#ax1.set_bins
+
 ax1.set_title("ax1 Plot")
 ax1.set_xlabel("ax1 x label xxxxx")
 ax1.set_ylabel("ax1 y label yyyyy")
 #ax1.marker ='x'
 
+ax1.annotate('A',  xytext=(1, 50),xy=(20, 75),
+             arrowprops=dict(facecolor='blue', shrink=0.05),
+             )
+
 ax1.plot(date_list, new_cases_list, color='tab:blue', label="new cases")
+#ax1.plot(date_list, Value_list, color='tab:orange', label="Staying local")
+#ax1.plot(pup_date_list, pup_VALUE_list, color='tab:red', label="pup")
+
+ax1.set_ylabel('Number of new covid cases')
 
 ax1a = ax1.twinx()  # instantiate a second axes that shares the same x-axis
 
 ax1a.plot(date_list, Value_list, color='tab:orange', label="Staying local")
 
-#ax1a = ax1.secondary_yaxis('right')
+ax1a = ax1.secondary_yaxis('right')
 ax1a.set_ylabel('secondary y label')
 ax1a.set_ylim(0, 100)
 
 ax1b = ax1.twinx()  # instantiate a second axes that shares the same x-axis
-ax1b.plot(pup_date_list, pup_VALUE_list, color='tab:red', label="new cases")
-ax1b.set_ylabel('secondary y label')
-#ax1b.set_ylim(0, 100)
+ax1b.plot(pup_date_list, pup_VALUE_list, color='tab:red', label="pup")
+
+ax1b.set_ylabel('ax1b secondary y label')
 
 
-#ax.set_ylim([cur_ylim[0], 1])
-
-
-#ax1.secondary_yaxis.set_ylim(1,100)
-
-ax1.annotate('S',  xytext=(10, 10),xy=(300, 500),
-             arrowprops=dict(facecolor='blue', shrink=0.05),
-             )
 ax1.legend(loc='upper left')  #improve performance by instructing legend location
 
+ax1.annotate('Large spike', xy=(.76, .95),  xycoords='axes fraction',
+            xytext=(0.55, 0.8), textcoords='axes fraction',
+            arrowprops=dict(facecolor='blue', shrink=0.05),
+            horizontalalignment='right', verticalalignment='top',
+            )
 
 
-ax2 = plt.subplots(2,1)
+
+ax2 = plt.subplots(1,1)
 ax2 = df_cases_County_cleaned.plot(kind='bar', x='date', y='VALUE')
 ax2.set_xticklabels(df_cases_County_cleaned.index.format(), rotation='vertical', size=6)
 ax2.locator_params(axis='x', nbins=20)
@@ -354,13 +375,54 @@ ax2.set_title("ax2 Plot")
 ax2.set_xlabel("ax2 x label xxxxx")
 ax2.set_ylabel("ax2 y label yyyyy")
 
+ax2.annotate('A',  xytext=(1, 50),xy=(20, 75),
+             arrowprops=dict(facecolor='blue', shrink=0.05),
+             )
+
+
 
 fig, ax3 = plt.subplots(1, 1, figsize=(10, 5))
 ax3.plot(pup_date_list, pup_VALUE_list, color='tab:blue', label="new cases")
 
 
+
+
+# print header to inspect
+print('df_pup head = \n', df_pup.head())   # view top lines of data
+print('df_pup dtypes = \n', df_pup.dtypes)   # view top lines of data
+
+df_bar1 = df_pup[df_pup['Sex'].isin(['Female', 'Male']) ]
+
+#count_females = df_bar1['Sex'].count(isin(['female']))
+#print("female", count_females)
+#count_males = df_bar1['Sex'].isin(['male']).count()
+#print('male', count_males)
+
+df_bar1 = (df_bar1.groupby(["Sex"]).sum().sort_values(["VALUE"], ascending=False).rename(columns={"VALUE" : "Sum of Value"}).reset_index())
+fig, ax4 = plt.subplots(1, 1, figsize=(4, 5))
+ax4.set_title("Comparison of male / female persons ax4 Plot")
+ax4.set_xlabel("Category Male / Female")
+ax4.set_ylabel("Number of persons ax4 y label yyyyy")
+ax4.bar(df_bar1['Sex'], df_bar1['Sum of Value'], color='tab:blue', label="PUP sum of Sexes")
+
+
+
+df_bar2 = (df_pup.groupby(["Statistic"]).sum().sort_values(["VALUE"], ascending=False).rename(columns={"VALUE" : "Sum of Value"}).reset_index())
+fig, ax5 = plt.subplots() # 1, figsize=(4, 4))
+fig.subplots_adjust(bottom=0.5)
+ax5.set_title("(Plot ax5) Comparison of supports payments")
+ax5.set_xlabel("Government support payments")
+ax5.set_ylabel("Number of people")
+ax5.set_xticklabels(df_bar2.loc[:, 'Statistic'],  rotation='vertical', size=8)
+print('\n List of statistics = \n', df_bar2.loc[:, 'Statistic'])
+# Pad margins so that markers don't get clipped by the axes
+ax5.margins(.1)
+ax5.bar(df_bar2['Statistic'], df_bar2['Sum of Value'], color='tab:blue', label="No.People")
+ax5.legend()
+
+
+
+
+
+
 plt.show()
-
-
-
-
