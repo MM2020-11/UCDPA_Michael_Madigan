@@ -1,14 +1,12 @@
-# Michael Madigan UDC PA  DA project 11April 2021
+# Michael Madigan UDC PA  DA project 16April 2021
 
 
 # import useful libraries
 import pandas as pd
 import matplotlib.pyplot as plt
-import json
-
 import numpy as np
 import datetime as dt
-#import matplotlib.dates as md
+
 
 # read in csv file with world wide covid data
 # data downloaded from https://ourworldindata.org/coronavirus-source-data
@@ -55,6 +53,7 @@ print(df_iso_date_new_cases.dtypes)
 df_iso_date_new_cases['date'] = pd.to_datetime(df_iso_date_new_cases['date'], yearfirst=True, format="%d/%m/%Y")
 #df_iso_date_new_cases['date'] = pd.to_datetime(df_iso_date_new_cases['date'], yearfirst=True, format="%Y/%m/%d")
 
+#df_SLI_Date_County_Value['Date'] = df_SLI_Date_County_Value['Date'].str.replace('2020 December20', '2020 December 20')
 print("Line 56 tail of new df1 with date column format set to date YMD ")
 print(df_iso_date_new_cases.tail())
 
@@ -79,7 +78,7 @@ print("line 63 data frame header cleaned for Ireland, IRL")
 print(df_IRL.head())
 print("check shape of data frame for Ireland to ensure reasonable data")
 print(df_IRL.shape)
-# save to a comma separated value file
+# save to a comma separated value file for inspection
 df_IRL.to_csv(r'export_dataframe_df_IRL.csv', index=False, header=True)
 
 #=========================================================================
@@ -256,8 +255,8 @@ df_cases_County_cleaned = (df_cases_County_2[(df_cases_County_2[date_cols] != 0)
 # add a new column just date for later plotting without the time values - just_date
 df_cases_County_cleaned['just_date'] = df_cases_County_cleaned['date'].dt.date
 
-print('df_cases_County_cleaned head = ', df_cases_County_cleaned.head())
-print('df_cases_County_cleaned tail = ', df_cases_County_cleaned.tail())
+print('\ndf_cases_County_cleaned head = \n', df_cases_County_cleaned.head())
+print('\ndf_cases_County_cleaned tail = \n', df_cases_County_cleaned.tail())
 
 # save files for debugging
 df_cases_County_cleaned.to_csv(r'export_df_cases_County_cleaned.csv', index=False, header=True)
@@ -307,58 +306,28 @@ date_list = df_cases_County_cleaned['just_date'].tolist()
 pup_date_list = df_pup2['date'].tolist()
 pup_VALUE_list = df_pup2['VALUE'].tolist()
 
+print('pup_date_list', pup_date_list)
+print('pup_VALUE_list', pup_VALUE_list)
+
 # export plot to an image file
-# plt.savefig("Figure-SLI data")
-
-
-xtick_list = []
-for tick in range(0, 403):
-    if tick%30 == 0:
-        xtick_list.append(tick)
-#print(f'tick_list= {xtick_list}')
-
-date_range = pd.date_range('2020-01-01', '2021-06-01', freq='MS')
-
-#xtick_list = pd.to_datetime(date_range, format='%Y-%m-%d')
-
+plt.savefig("Figure-SLI data")
 
 fig, ax1 = plt.subplots(1,1, figsize=(10, 5))
 
-#ax1.plot(date_list, new_cases_list, label="ax1 new cases list label", color = 'blue', lw=1)
-#ax1.set_xticklabels(df_cases_County_clea
-
-
-ax1.set_title("ax1 Plot")
+ax1.set_title("Plot of Irish covid cases compared to staying alone metris (ax1)")
 ax1.set_xlabel("ax1 x label xxxxx")
 ax1.set_ylabel("ax1 y label yyyyy")
-#ax1.marker ='x'
 
-ax1.annotate('A',  xytext=(1, 50),xy=(20, 75),
-             arrowprops=dict(facecolor='blue', shrink=0.05),
-             )
+ax1.annotate('A',  xytext=(1, 50),xy=(20, 75), arrowprops=dict(facecolor='blue', shrink=0.05))
 
 ax1.plot(date_list, new_cases_list, color='tab:blue', label="new cases")
-#ax1.plot(date_list, Value_list, color='tab:orange', label="Staying local")
+#ax1.plot(date_list, Value_list, color='tab:red', label="Staying local")
 #ax1.plot(pup_date_list, pup_VALUE_list, color='tab:red', label="pup")
 
 ax1.set_ylabel('Number of new covid cases')
 
-ax1a = ax1.twinx()  # instantiate a second axes that shares the same x-axis
-
-ax1a.plot(date_list, Value_list, color='tab:orange', label="Staying local")
-
-ax1a = ax1.secondary_yaxis('right')
-ax1a.set_ylabel('secondary y label')
-ax1a.set_ylim(0, 100)
-
-ax1b = ax1.twinx()  # instantiate a second axes that shares the same x-axis
-ax1b.plot(pup_date_list, pup_VALUE_list, color='tab:red', label="pup")
-
-ax1b.set_ylabel('ax1b secondary y label')
-
-
-ax1.legend(loc='upper left')  #improve performance by instructing legend location
-
+ax1.legend(loc='upper left')  # Improve performance by instructing legend location
+# add an arrow annotation to plot
 ax1.annotate('Large spike', xy=(.76, .95),  xycoords='axes fraction',
             xytext=(0.55, 0.8), textcoords='axes fraction',
             arrowprops=dict(facecolor='blue', shrink=0.05),
@@ -366,6 +335,19 @@ ax1.annotate('Large spike', xy=(.76, .95),  xycoords='axes fraction',
             )
 
 
+ax1a = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+ax1a.plot(date_list, Value_list, color='tab:orange', label="Staying local")
+#ax1a = ax1.secondary_yaxis('right')
+ax1a.set_ylabel('secondary y label')
+ax1a.set_ylim(50, 80)
+
+#ax1b = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+#ax1b.plot(pup_date_list, pup_VALUE_list, color='tab:red', label="pup")
+#ax1b.set_ylabel('ax1b secondary y label')
+
+#============================================================================================
+# Second plot
+#============================================================================================
 
 ax2 = plt.subplots(1,1)
 ax2 = df_cases_County_cleaned.plot(kind='bar', x='date', y='VALUE')
@@ -382,7 +364,7 @@ ax2.annotate('A',  xytext=(1, 50),xy=(20, 75),
 
 
 fig, ax3 = plt.subplots(1, 1, figsize=(10, 5))
-ax3.plot(pup_date_list, pup_VALUE_list, color='tab:blue', label="new cases")
+ax3.plot(pup_date_list, pup_VALUE_list, color='tab:green', label="AX3 new cases")
 
 
 
@@ -399,15 +381,36 @@ df_bar1 = df_pup[df_pup['Sex'].isin(['Female', 'Male']) ]
 #print('male', count_males)
 
 df_bar1 = (df_bar1.groupby(["Sex"]).sum().sort_values(["VALUE"], ascending=False).rename(columns={"VALUE" : "Sum of Value"}).reset_index())
-fig, ax4 = plt.subplots(1, 1, figsize=(4, 5))
+fig, ax4 = plt.subplots(1, 1, figsize=(8, 4))
 ax4.set_title("Comparison of male / female persons ax4 Plot")
 ax4.set_xlabel("Category Male / Female")
 ax4.set_ylabel("Number of persons ax4 y label yyyyy")
 ax4.bar(df_bar1['Sex'], df_bar1['Sum of Value'], color='tab:blue', label="PUP sum of Sexes")
 
+mean_females = df_pup.loc[df_pup['Sex'] == 'Female', 'VALUE'].mean()
+print('\n mean no. of female = ', mean_females)
+
+mean_males = df_pup.loc[df_pup['Sex'] == 'Male', 'VALUE'].mean()
+print('\n mean no. of male = ', mean_males)
+
+ax4.text(-0.05, 3.0E7, int(mean_males), style='italic',
+        bbox={'facecolor': 'green', 'alpha': 0.1, 'pad': 8})
+
+ax4.text(.95, 3.0E7, int(mean_females), style='italic',
+        bbox={'facecolor': 'green', 'alpha': 0.1, 'pad': 8})
+
+Ratio_M_F = mean_males /    mean_females
+print("%.2f" % Ratio_M_F)
+Ratio_M_F_text = "Ratio Male/Female = " + ("%.2f" % Ratio_M_F)
+
+ax4.text(.73, 6.0E7, Ratio_M_F_text, style='italic',
+        bbox={'facecolor': 'green', 'alpha': 0.1, 'pad': 8})
 
 
-df_bar2 = (df_pup.groupby(["Statistic"]).sum().sort_values(["VALUE"], ascending=False).rename(columns={"VALUE" : "Sum of Value"}).reset_index())
+
+
+df_bar2 = (df_pup.groupby(["Statistic"]).mean().sort_values(["VALUE"], ascending=False).rename(columns={"VALUE" : "Sum of Value"}).reset_index())
+
 fig, ax5 = plt.subplots() # 1, figsize=(4, 4))
 fig.subplots_adjust(bottom=0.5)
 ax5.set_title("(Plot ax5) Comparison of supports payments")
@@ -419,7 +422,6 @@ print('\n List of statistics = \n', df_bar2.loc[:, 'Statistic'])
 ax5.margins(.1)
 ax5.bar(df_bar2['Statistic'], df_bar2['Sum of Value'], color='tab:blue', label="No.People")
 ax5.legend()
-
 
 
 
