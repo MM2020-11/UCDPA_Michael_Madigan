@@ -27,7 +27,7 @@ print(df1.dtypes)   # date is an object
 
 # inspect data to determine which columns contain valuable information for this project
 # as the header file is very wide I list the column headings
-# Display all column names with a "for loop"
+# Display all column names with a "for loop" instead of print('df1 columns', df1.columns) to get a neater print
 for idx, column in enumerate(df1.columns):
     print(idx, column)
 # From the column inspection I determine which columns are relevant to this project
@@ -291,13 +291,13 @@ print('pup_date_list', pup_date_list)
 print('pup_VALUE_list', pup_VALUE_list)
 
 # export plot to an image file
-plt.savefig("Figure-SLI data")
+#plt.savefig("Figure-SLI data")
 
 fig, ax1 = plt.subplots(1,1, figsize=(10, 5))
 
-ax1.set_title("Plot of Irish covid cases compared to staying alone metris (ax1)")
-ax1.set_xlabel("ax1 x label xxxxx")
-ax1.set_ylabel("ax1 y label yyyyy")
+ax1.set_title("Plot of Irish covid cases compared to Staying Local metric (ax1)")
+ax1.set_xlabel("Reported dates")
+ax1.set_ylabel('Number of new covid cases')
 
 ax1.annotate('A',  xytext=(1, 50),xy=(20, 75), arrowprops=dict(facecolor='blue', shrink=0.05))
 
@@ -305,7 +305,7 @@ ax1.plot(date_list, new_cases_list, color='tab:blue', label="new cases")
 #ax1.plot(date_list, Value_list, color='tab:red', label="Staying local")
 #ax1.plot(pup_date_list, pup_VALUE_list, color='tab:red', label="pup")
 
-ax1.set_ylabel('Number of new covid cases')
+
 
 ax1.legend(loc='upper left')  # Improve performance by instructing legend location
 # add an arrow annotation to plot
@@ -317,10 +317,10 @@ ax1.annotate('Large spike', xy=(.73, .95),  xycoords='axes fraction',
 
 
 ax1a = ax1.twinx()  # instantiate a second axes that shares the same x-axis
-ax1a.plot(date_list, Value_list, color='tab:orange', label="Staying local")
-#ax1a = ax1.secondary_yaxis('right')
-ax1a.set_ylabel('secondary y label')
-ax1a.set_ylim(50, 80)
+ax1a.plot(date_list, Value_list, color='tab:orange', label="Staying Local")
+
+ax1a.set_ylabel('Percentage of people staying local')
+ax1a.set_ylim(50, 80) # limits set to best present data
 
 #ax1b = ax1.twinx()  # instantiate a second axes that shares the same x-axis
 #ax1b.plot(pup_date_list, pup_VALUE_list, color='tab:red', label="pup")
@@ -392,9 +392,9 @@ ax4.text(.73, 6.0E7, Ratio_M_F_text, style='italic',
 
 df_bar2 = (df_pup.groupby(["Statistic"]).mean().sort_values(["VALUE"], ascending=False).rename(columns={"VALUE" : "Sum of Value"}).reset_index())
 
-fig, ax5 = plt.subplots() # 1, figsize=(4, 4))
+fig, ax5 = plt.subplots( figsize=(7, 8))
 fig.subplots_adjust(bottom=0.5)
-ax5.set_title("(Plot ax5) Comparison of supports payments")
+ax5.set_title("Plot 5 Comparison of supports payments")
 ax5.set_xlabel("Government support payments")
 ax5.set_ylabel("Number of people")
 ax5.set_xticklabels(df_bar2.loc[:, 'Statistic'],  rotation='vertical', size=8)
