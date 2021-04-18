@@ -1,5 +1,7 @@
-# Michael Madigan UDC PA  DA project 16April 2021
-
+# Michael Madigan UDC PA  DA project 18April 2021
+# Project for assiment of UCS PA data analytics course, March/April 2021
+# Program reads three data sources, cleans, merges and plots the data
+#
 
 # import useful libraries
 import pandas as pd
@@ -7,18 +9,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 import datetime as dt
 
-
 # read in csv file with world wide covid data
 # data downloaded from https://ourworldindata.org/coronavirus-source-data
 # import csv file into a Pandas DataFrame
 # Download data from site
-#URL_Covid_dataset = r'https://covid.ourworldindata.org/data/owid-covid-data.csv'
+URL_Covid_dataset = r'https://covid.ourworldindata.org/data/owid-covid-data.csv'
 #df1_from_web = pd.read_csv(URL_Covid_dataset)
-#print('Inspection of web data head', df1_from_web.head())
-#print('Inspection of web data tail', df1_from_web.head())
+
 
 #Select data source - if offline then use local version
-#df1 = df1_from_web   # use this data source when on-line
+#df1 = df1_from_web   # use this data source when on-line is available
 df1 = pd.read_csv("owid-covid-data.csv") # directly read a downloaded version if web version is not available
 
 print(df1.head())   # view top lines of data
@@ -44,16 +44,15 @@ df_iso_date_new_cases = df1.loc[:, selected_cols] # using the .loc function
 print("Line 44 header of new dataframe with only three necessary columns")
 print(df_iso_date_new_cases.head())
 
-print("Line 47 data types of new df1")
+print("Line 48 data types of new df1")
 print(df_iso_date_new_cases.dtypes)
 # from this we see that the "date" column is an object, this should be changed to a date field
 
 # set the date column to a date format using .to_date() function
 # set date format to YMD.
-df_iso_date_new_cases['date'] = pd.to_datetime(df_iso_date_new_cases['date'], yearfirst=True, format="%d/%m/%Y")
-#df_iso_date_new_cases['date'] = pd.to_datetime(df_iso_date_new_cases['date'], yearfirst=True, format="%Y/%m/%d")
+df_iso_date_new_cases['date'] = pd.to_datetime(df_iso_date_new_cases['date'], yearfirst=True, format="%Y/%m/%d")
 
-#df_SLI_Date_County_Value['Date'] = df_SLI_Date_County_Value['Date'].str.replace('2020 December20', '2020 December 20')
+
 print("Line 56 tail of new df1 with date column format set to date YMD ")
 print(df_iso_date_new_cases.tail())
 
@@ -66,20 +65,21 @@ print(count_NaN)
 # clean the NaN's and replace with zeros.
 df_iso_date_new_cases_no_NaN = df_iso_date_new_cases.fillna(0)
 
-
 #Repeated Check data for NaN to ensure fillna worked as planned
 count_NaN = df_iso_date_new_cases_no_NaN[selected_cols].isna().sum()
-print("Line 71 Count of NaNs removed in df_iso_date_new_cases dataframe ")
-print(count_NaN)
+print("Line 70 Count of NaNs removed in df_iso_date_new_cases dataframe ")
+print('count_NaN', count_NaN)
 
 # Select only the rows that pertain to ireland, ISO code = IRL
 df_IRL = df_iso_date_new_cases_no_NaN.loc[df_iso_date_new_cases_no_NaN["iso_code"] == 'IRL', :]
-print("line 63 data frame header cleaned for Ireland, IRL")
+print("line 75 data frame header cleaned for Ireland, IRL")
 print(df_IRL.head())
 print("check shape of data frame for Ireland to ensure reasonable data")
 print(df_IRL.shape)
 # save to a comma separated value file for inspection
 df_IRL.to_csv(r'export_dataframe_df_IRL.csv', index=False, header=True)
+
+
 
 #=========================================================================
 print("===============================================================")
@@ -95,13 +95,6 @@ print("===============================================================")
 
 #read in csv file with staying local data ( in event internet not available )
 df_SLI = pd.read_csv("SLI01.20210415T090423.csv")
-
-#required_cols = ['Date', 'County', 'VALUE']
-#URL_SLI_dataset = 'https://ws.cso.ie/public/api.jsonrpc?data=%7B%22jsonrpc%22:%222.0%22,%22method%22:%22PxStat.Data.Cube_API.ReadDataset%22,%22params%22:%7B%22class%22:%22query%22,%22id%22:%5B%5D,%22dimension%22:%7B%7D,%22extension%22:%7B%22pivot%22:null,%22codes%22:false,%22language%22:%7B%22code%22:%22en%22%7D,%22format%22:%7B%22type%22:%22JSON-stat%22,%22version%22:%222.0%22%7D,%22matrix%22:%22SLI01%22%7D,%22version%22:%222.0%22%7D%7D'
-#df_SLI = pd.read_json(URL_SLI_dataset)
-#df_SLI = pd.json_normalize(df_SLI)
-#df_SLI.to_csv(r'export_df_SLI_json.csv', index=False, header=True)
-
 
 print('df_SLI head = ', df_SLI.head())   # view top lines of data
 print('df_SLI shape = ', df_SLI.shape)   # check shape number of row and columns
@@ -125,12 +118,12 @@ df_SLI_Date_County_Value = df_SLI.loc[:, required_cols]
 # data cleaned here
 df_SLI_Date_County_Value['Date'] = df_SLI_Date_County_Value['Date'].str.replace('2020 December20', '2020 December 20')
 
-print("Line 102 header of new dataframe with only three necessary columns")
+print("Line 121 header of new dataframe with only three necessary columns")
 print(df_SLI_Date_County_Value.head())
 
 #Check data for NaN
 count_NaN = df_SLI_Date_County_Value[required_cols].isna().sum()
-print("Line 121 Count of NaNs in df_iso_date_new_cases dataframe ")
+print("Line 126 Count of NaNs in df_iso_date_new_cases dataframe ")
 print("\n count_NaN in SLI df =\n", count_NaN, '\n')
 
 #initially just removed NaN with zero however a few missing plot points dropped to zero
@@ -142,29 +135,20 @@ df_SLI_Date_County_Value_No_NaN = df_SLI_Date_County_Value.fillna(0)
 
 #Repeated Check data for NaN to ensure fillna worked as planned
 count_NaN = df_SLI_Date_County_Value_No_NaN[required_cols].isna().sum()
-print("Line 129 Count of NaNs removed in df_iso_date_new_cases dataframe ")
+# Count of NaNs removed in df_iso_date_new_cases dataframe
 print('df_SLI_Date_County_Value_No_NaN = count_NaN = ', count_NaN)
 
 
-
-print("Line 134 data frame cleaned for State" )
+print("Line 142 data frame cleaned for State" )
 print(df_SLI_Date_County_Value_No_NaN.head())
-print("Line 136 check shape of data frame for Ireland to ensure reasonable data" )
+# Check shape of data frame for Ireland to ensure reasonable data
 print(df_SLI_Date_County_Value_No_NaN.shape)
 
-# set the date column to a date format
-#df_SLI_State.loc[:, ['Date']] = pd.to_datetime(df_SLI_State.loc[:, ['Date']], format='%Y/%m/%d')
-# note on debugging noticed a date field format error
-# normal format is yyyy space Month space day, however data has
+# format as date
 df_SLI_Date_County_Value_No_NaN['New_Date'] = pd.to_datetime(df_SLI_Date_County_Value_No_NaN['Date'], format="%Y %B %d")
-#df_SLI_Date_County_Value_No_NaN['New_Date2'] = pd.to_datetime(df_SLI_Date_County_Value_No_NaN['Date'], format="%Y %B %d")
-
 
 # Select only the rows that pertain to all ireland i.e. State, County = State
 df_SLI_state = df_SLI_Date_County_Value_No_NaN.loc[df_SLI_Date_County_Value_No_NaN["County"] == 'State', :]
-
-
-#df_SLI_state.sort_index()
 
 df_SLI_state.to_csv(r'export_dataframe_df_SLI_state.csv', index=False, header=True)
 
@@ -198,7 +182,6 @@ print('df_pup head = ', df_pup.head())   # view top lines of data
 # clean data in pup dataframe
 # select the required columns
 required_cols = ['Statistic', 'Age Group', 'Sex', 'VALUE', 'first_Monday_date']
-
 df_pup1 = df_pup.loc[:, required_cols]
 
 print('\n df_pup1 head = \n', df_pup1.head())   # view top lines of data
@@ -209,7 +192,6 @@ df_pup1 = df_pup1.loc[df_pup1["Age Group"] == 'All ages', :]
 df_pup1 = df_pup1.loc[df_pup1["Sex"] == 'Both sexes', :]
 
 print('\n df_pup1 head = \n', df_pup1.head())   # view top lines of data
-
 
 # reduce data further
 required_cols = ['Statistic', 'VALUE', 'first_Monday_date']
@@ -248,8 +230,7 @@ df_cases_County_cleaned = df_cases_County_2 = df_cases_County_2.fillna(0)
 #date_cols = ['date','Date']
 date_cols = ['date']
 
-#df_cases_County_cleaned = (df_cases_County_2[(df_cases_County_2[date_cols] != 0).all(axis=1)]).sort_values('date')
-# remove any 'date' filed that are zero
+# remove any 'date' field that are zero
 df_cases_County_cleaned = (df_cases_County_2[(df_cases_County_2[date_cols] != 0).all(axis=1)])
 
 # add a new column just date for later plotting without the time values - just_date
@@ -328,8 +309,8 @@ ax1.set_ylabel('Number of new covid cases')
 
 ax1.legend(loc='upper left')  # Improve performance by instructing legend location
 # add an arrow annotation to plot
-ax1.annotate('Large spike', xy=(.76, .95),  xycoords='axes fraction',
-            xytext=(0.55, 0.8), textcoords='axes fraction',
+ax1.annotate('Large spike', xy=(.73, .95),  xycoords='axes fraction',
+            xytext=(0.54, 0.8), textcoords='axes fraction',
             arrowprops=dict(facecolor='blue', shrink=0.05),
             horizontalalignment='right', verticalalignment='top',
             )
