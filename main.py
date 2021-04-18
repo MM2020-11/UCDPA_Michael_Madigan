@@ -244,7 +244,7 @@ df_cases_County_cleaned.to_csv(r'export_df_cases_County_cleaned.csv', index=Fals
 df_cases_County_2.to_csv(r'export_dataframe_merge.csv', index=False, header=True)
 
 correlation = df_cases_County_2['VALUE'].corr( df_cases_County_2['new_cases'], method='pearson')
-print('\n coor1 = ', correlation)
+print('\n Pearson correlation coefficient for new cases and SLI = ', correlation)
 
 #===================================================================================
 #
@@ -294,20 +294,18 @@ print('pup_VALUE_list', pup_VALUE_list)
 #plt.savefig("Figure-SLI data")
 
 fig, ax1 = plt.subplots(1,1, figsize=(10, 5))
-
-ax1.set_title("Plot of Irish covid cases compared to Staying Local metric (ax1)")
+ax=fig.add_axes([0,0,1,1])
+ax1.set_title("Plot of Irish covid cases compared to Staying Local metric")
 ax1.set_xlabel("Reported dates")
 ax1.set_ylabel('Number of new covid cases')
-
 ax1.annotate('A',  xytext=(1, 50),xy=(20, 75), arrowprops=dict(facecolor='blue', shrink=0.05))
+
 
 ax1.plot(date_list, new_cases_list, color='tab:blue', label="new cases")
 #ax1.plot(date_list, Value_list, color='tab:red', label="Staying local")
 #ax1.plot(pup_date_list, pup_VALUE_list, color='tab:red', label="pup")
+#ax1.legend(loc='upper left')  # Improve performance by instructing legend location
 
-
-
-ax1.legend(loc='upper left')  # Improve performance by instructing legend location
 # add an arrow annotation to plot
 ax1.annotate('Large spike', xy=(.73, .95),  xycoords='axes fraction',
             xytext=(0.54, 0.8), textcoords='axes fraction',
@@ -322,9 +320,19 @@ ax1a.plot(date_list, Value_list, color='tab:orange', label="Staying Local")
 ax1a.set_ylabel('Percentage of people staying local')
 ax1a.set_ylim(50, 80) # limits set to best present data
 
-#ax1b = ax1.twinx()  # instantiate a second axes that shares the same x-axis
-#ax1b.plot(pup_date_list, pup_VALUE_list, color='tab:red', label="pup")
-#ax1b.set_ylabel('ax1b secondary y label')
+ax1b = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+ax1b.plot(pup_date_list, pup_VALUE_list, color='tab:red', label="pup")
+ax1b.set_ylabel('ax1b secondary y label')
+ax1b.set_ylim(0, 2000) # limits set to best present data
+
+
+
+
+
+
+
+
+
 
 #============================================================================================
 # Second plot
@@ -346,7 +354,9 @@ ax2.annotate('A',  xytext=(1, 50),xy=(20, 75),
 
 fig, ax3 = plt.subplots(1, 1, figsize=(10, 5))
 ax3.plot(pup_date_list, pup_VALUE_list, color='tab:green', label="AX3 new cases")
-
+ax3.set_title("ax3 Plot")
+ax3.set_xlabel("Date" )
+ax3.set_ylabel("Number of people receiving pandemic payments")
 
 
 
@@ -363,9 +373,9 @@ df_bar1 = df_pup[df_pup['Sex'].isin(['Female', 'Male']) ]
 
 df_bar1 = (df_bar1.groupby(["Sex"]).sum().sort_values(["VALUE"], ascending=False).rename(columns={"VALUE" : "Sum of Value"}).reset_index())
 fig, ax4 = plt.subplots(1, 1, figsize=(8, 4))
-ax4.set_title("Comparison of male / female persons ax4 Plot")
+ax4.set_title("Comparison of male / female persons")
 ax4.set_xlabel("Category Male / Female")
-ax4.set_ylabel("Number of persons ax4 y label yyyyy")
+ax4.set_ylabel("Number of persons")
 ax4.bar(df_bar1['Sex'], df_bar1['Sum of Value'], color='tab:blue', label="PUP sum of Sexes")
 
 mean_females = df_pup.loc[df_pup['Sex'] == 'Female', 'VALUE'].mean()
@@ -390,6 +400,7 @@ ax4.text(.73, 6.0E7, Ratio_M_F_text, style='italic',
 
 
 
+#df_bar2 = (df_pup.groupby(["Statistic"]).mean().sort_values(["VALUE"], ascending=False).rename(columns={"VALUE" : "Sum of Value"}).reset_index())
 df_bar2 = (df_pup.groupby(["Statistic"]).mean().sort_values(["VALUE"], ascending=False).rename(columns={"VALUE" : "Sum of Value"}).reset_index())
 
 fig, ax5 = plt.subplots( figsize=(7, 8))
