@@ -373,40 +373,50 @@ ax3.text(px1+(px2-px1)/10, pup_max, max_text)
 print('df_pup head = \n', df_pup.head())   # view top lines of data
 print('df_pup dtypes = \n', df_pup.dtypes)   # view data types
 
-df_bar1 = df_pup[df_pup['Sex'].isin(['Female', 'Male'])]
+#count number of people on 'Persons in receipt of the Pandemic Unemployment Payment'
+df_bar1 = df_pup.loc[df_pup['Statistic'] == 'Persons in receipt of the Pandemic Unemployment Payment', :]
+df_bar1 = df_bar1.loc[df_pup['Age Group'] == 'All ages', :]
+df_bar1 = df_bar1.loc[(df_pup['Sex'] == 'Male') | (df_pup['Sex'] == 'Female'), :]
 df_bar1.to_csv(r'export_df_bar1.csv', index=False, header=True)
 
-df_bar1 = (df_bar1.groupby(["Sex"]).sum().sort_values(["VALUE"], ascending=False).rename(columns={"VALUE" : "Sum of Value"}).reset_index())
+
+
+df_bar1 = (df_bar1.groupby(["Sex"]).mean().sort_values(["VALUE"], ascending=False).rename(columns={"VALUE": "mean of Value"}).reset_index())
 fig, ax4 = plt.subplots(1, 1, figsize=(8, 4))
-ax4.set_title("Comparison of male / female persons")
+ax4.set_title("Comparison of average male vs female on PUP")
 ax4.set_xlabel("Category Male / Female")
 ax4.set_ylabel("Number of persons")
-ax4.bar(df_bar1['Sex'], df_bar1['Sum of Value'], color='tab:blue', label="PUP sum of Sexes")
 
-mean_females = df_pup.loc[df_pup['Sex'] == 'Female', 'VALUE'].mean()
+ax4.bar(df_bar1['Sex'], df_bar1['mean of Value'], color='tab:blue', label="PUP average of Sexes")
+
+mean_females = df_pup.loc[(df_pup["Age Group"] == 'All ages') & (df_pup["Sex"] != 'Both Sexes') & (df_pup["Sex"] == 'Female'),'VALUE'].mean()
 print('\n mean no. of female = ', mean_females)
 
-mean_males = df_pup.loc[df_pup['Sex'] == 'Male', 'VALUE'].mean()
+mean_males = df_pup.loc[(df_pup["Age Group"] == 'All ages') & (df_pup["Sex"] != 'Both Sexes') & (df_pup["Sex"] == 'Male'),'VALUE'].mean()
 print('\n mean no. of male = ', mean_males)
 
-ax4.text(-0.05, 3.0E7, int(mean_males), style='italic',
+
+# add numerical data half way up bar
+ax4.text(-0.1, mean_males/2, int(mean_males), style='italic',
         bbox={'facecolor': 'green', 'alpha': 0.1, 'pad': 8})
 
-ax4.text(.95, 3.0E7, int(mean_females), style='italic',
+# add numerical data half way up bar
+ax4.text(.9, mean_females/2, int(mean_females), style='italic',
         bbox={'facecolor': 'green', 'alpha': 0.1, 'pad': 8})
 
 Ratio_M_F = mean_males /    mean_females
 print("%.2f" % Ratio_M_F)
 Ratio_M_F_text = "Ratio Male/Female = " + ("%.2f" % Ratio_M_F)
 
-ax4.text(.73, 6.0E7, Ratio_M_F_text, style='italic',
+# add numerical data above the female bar
+ax4.text(.73, mean_females + 30000, Ratio_M_F_text, style='italic',
         bbox={'facecolor': 'green', 'alpha': 0.1, 'pad': 8})
 
 
 
 
 #df_bar2 = (df_pup.groupby(["Statistic"]).mean().sort_values(["VALUE"], ascending=False).rename(columns={"VALUE" : "Sum of Value"}).reset_index())
-df_bar2 = (df_pup.groupby(["Statistic"]).mean().sort_values(["VALUE"], ascending=False).rename(columns={"VALUE" : "Sum of Value"}).reset_index())
+df_bar2 = (df_pup.groupby(["Statistic"]).mean().sort_values(["VALUE"], ascending=False).rename(columns={"VALUE" : "mean of Value"}).reset_index())
 
 fig, ax5 = plt.subplots( figsize=(7, 8))
 fig.subplots_adjust(bottom=0.5)
@@ -417,11 +427,53 @@ ax5.set_xticklabels(df_bar2.loc[:, 'Statistic'],  rotation='vertical', size=8)
 print('\n List of statistics = \n', df_bar2.loc[:, 'Statistic'])
 # Pad margins so that markers don't get clipped by the axes
 ax5.margins(.1)
-ax5.bar(df_bar2['Statistic'], df_bar2['Sum of Value'], color='tab:blue', label="No.People")
+ax5.bar(df_bar2['Statistic'], df_bar2['mean of Value'], color='tab:blue', label="No.People")
 ax5.legend()
 
+
+#==============================================================================
+#  chart pup by age group
+#==============================================================================
+
+
+#Count number of people on 'Persons in receipt of the Pandemic Unemployment Payment'
+df_bar6 = df_pup.loc[df_pup['Statistic'] == 'Persons in receipt of the Pandemic Unemployment Payment', :]
+df_bar6 = df_bar6.loc[df_pup['Age Group'] != 'All ages', :]
+df_bar6 = df_bar6.loc[(df_pup['Sex'] == 'Both sexes'), :]
+
+#df_bar6 = (df_bar6.groupby(["Age Group"]).mean().sort_values(["VALUE"], ascending=False).rename(columns={"VALUE": "mean of Value"}).reset_index())
+df_bar6 = df_bar6.groupby('Age Group', as_index=False)['VALUE'].mean()
+df_bar6.to_csv(r'export_df_bar6.csv', index=True, header=True)
+
+fig, ax6 = plt.subplots(1, 1, figsize=(8, 4))
+ax6.set_title("Comparison of age groups on PUP")
+ax6.set_xlabel("Category Age group")
+ax6.set_ylabel("Number of persons")
+
+#ax6.bar(df_bar6['Age Group'], df_bar6['mean of Value'], color='tab:blue', label="PUP average of Age groups")
+ax6.bar(df_bar6['Age Group'], df_bar6['VALUE'], color='tab:blue', label="PUP average of Age groups")
+
+For rx = 0
+mean_age_group = df_bar6.iloc[2, 0]
+print('\n mean_age_group = ', mean_age_group)
+
+
+
+# add numerical data half way up bar
+#ax4.text(-0.1, mean_males/2, int(mean_males), style='italic', bbox={'facecolor': 'green', 'alpha': 0.1, 'pad': 8})
+
+# add numerical data half way up bar
+#ax4.text(.9, mean_females/2, int(mean_females), style='italic', bbox={'facecolor': 'green', 'alpha': 0.1, 'pad': 8})
+
+#Ratio_M_F = mean_males /    mean_females
+#print("%.2f" % Ratio_M_F)
+#Ratio_M_F_text = "Ratio Male/Female = " + ("%.2f" % Ratio_M_F)
+
+# add numerical data above the female bar
+#ax4.text(.73, mean_females + 30000, Ratio_M_F_text, style='italic', bbox={'facecolor': 'green', 'alpha': 0.1, 'pad': 8})
 
 
 
 
 plt.show()
+
