@@ -295,9 +295,8 @@ ax1.set_ylabel('Number of new covid cases')
 #ax1.annotate('A',  xytext=(1, 50),xy=(20, 75), arrowprops=dict(facecolor='blue', shrink=0.05))
 
 ax1.plot(date_list, new_cases_list, color='tab:blue', label="new cases")
-#ax1.plot(date_list, Value_list, color='tab:red', label="Staying local")
-#ax1.plot(pup_date_list, pup_VALUE_list, color='tab:red', label="pup")
-ax1.legend(loc='upper left')  # Improve performance by instructing legend location
+
+
 
 # add an arrow annotation to plot
 ax1.annotate('Large spike', xy=(.73, .95),  xycoords='axes fraction',
@@ -312,7 +311,7 @@ ax1a.plot(date_list, Value_list, color='tab:orange', label="Staying Local")
 ax1a.set_ylabel('Percentage of people staying local')
 ax1a.set_ylim(50, 80) # limits set to best present data
 
-
+ax1.legend(loc='upper left')  # Improve performance by instructing legend location
 
 
 
@@ -347,23 +346,30 @@ ax2b = ax2.twinx()  # instantiate a second axes that shares the same x-axis
 ax2b.plot(pup_date_list, pup_VALUE_list, color='tab:red', label="pup")
 ax2b.set_ylabel('No people receiving pandemic payments')
 
+ax2.legend(loc='upper left')  # Improve performance by instructing legend location
+
+# set start and end points for vertical line, convert date limits to date/number for graph
+# three point of interest when data jumped
+px1 = dt.datetime.strptime('2020-04-10', '%Y-%m-%d')
+px2 = dt.datetime.strptime('2020-10-20', '%Y-%m-%d')
+px3 = dt.datetime.strptime('2021-01-02', '%Y-%m-%d')
+
+# draw a line on chart at the mean value slight above the dashed line
+ax2.vlines(px1, 100,8000, label='ax2 h', ls='--', color='g')
+line_text1 = " Large increase"
+ax2.text(px1, 4000, line_text1)
+
+ax2.vlines(px2, 100,4000, label='ax2 h', ls='--', color='g')
+line_text2 = " Step increase"
+ax2.text(px2, 4000, line_text2)
+
+ax2.vlines(px3, 100,8000, label='ax2 h', ls='--', color='g')
+line_text3 = " Christmas bounce"
+ax2.text(px3, 50, line_text3)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#=================================================
+# plot 3
 #=================================================
 # plot pup and average of pup
 fig, ax3 = plt.subplots(1, 1, figsize=(10, 5))
@@ -378,8 +384,8 @@ pup_max=df_pup2['VALUE'].max()
 # set start and end points for line, convert date limits to date/number for graph
 px1 = dt.datetime.strptime('2020-01-01','%Y-%m-%d')
 px2 = dt.datetime.strptime('2021-05-01','%Y-%m-%d')
-ax3.hlines(pup_mean, px1, px2, label='ax3 h', ls='--', color='g')
 # draw a line on chart at the mean value slight above the dashed line
+ax3.hlines(pup_mean, px1, px2, label='ax3 h', ls='--', color='g')
 mean_line_text = "Mean no. of people receiving pup = " + str(int(pup_mean))
 ax3.text(px1, pup_mean+10000, mean_line_text)
 # add a text box at the max location
@@ -431,7 +437,6 @@ ax4.text(.73, mean_females + 30000, Ratio_M_F_text, style='italic',
 
 
 
-
 #df_bar2 = (df_pup.groupby(["Statistic"]).mean().sort_values(["VALUE"], ascending=False).rename(columns={"VALUE" : "Sum of Value"}).reset_index())
 df_bar2 = (df_pup.groupby(["Statistic"]).mean().sort_values(["VALUE"], ascending=False).rename(columns={"VALUE" : "mean of Value"}).reset_index())
 
@@ -449,7 +454,7 @@ ax5.legend()
 
 
 #==============================================================================
-#  chart pup by age group
+#  Plot #5 chart pup by age group
 #==============================================================================
 
 
