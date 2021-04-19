@@ -77,7 +77,7 @@ print(df_IRL.head())
 print("check shape of data frame for Ireland to ensure reasonable data")
 print(df_IRL.shape)
 # save to a comma separated value file for inspection
-df_IRL.to_csv(r'export_dataframe_df_IRL.csv', index=False, header=True)
+df_IRL.to_csv(r'export_df_IRL.csv', index=False, header=True)
 
 
 
@@ -150,7 +150,7 @@ df_SLI_Date_County_Value_No_NaN['New_Date'] = pd.to_datetime(df_SLI_Date_County_
 # Select only the rows that pertain to all ireland i.e. State, County = State
 df_SLI_state = df_SLI_Date_County_Value_No_NaN.loc[df_SLI_Date_County_Value_No_NaN["County"] == 'State', :]
 
-df_SLI_state.to_csv(r'export_dataframe_df_SLI_state.csv', index=False, header=True)
+df_SLI_state.to_csv(r'export_df_SLI_state.csv', index=False, header=True)
 
 #===================================================================================
 #
@@ -241,7 +241,7 @@ print('\ndf_cases_County_cleaned tail = \n', df_cases_County_cleaned.tail())
 
 # save files for debugging
 df_cases_County_cleaned.to_csv(r'export_df_cases_County_cleaned.csv', index=False, header=True)
-df_cases_County_2.to_csv(r'export_dataframe_merge.csv', index=False, header=True)
+df_cases_County_2.to_csv(r'export_merge.csv', index=False, header=True)
 
 correlation = df_cases_County_2['VALUE'].corr( df_cases_County_2['new_cases'], method='pearson')
 print('\n Pearson correlation coefficient for new cases and SLI = ', correlation)
@@ -270,8 +270,8 @@ print('\n df_cases_pup1 shape = ', df_cases_pup1.shape)
 df_cases_pup1.to_csv(r'export_df_cases_pup1.csv', index=False, header=True)
 
 
-correlation = df_pup2['VALUE'].corr( df_pup2['new_cases'],method='pearson')
-print('\n coor2 = ', correlation )
+correlation = df_pup2['VALUE'].corr( df_pup2['new_cases'], method='pearson')
+print('\n Correlation between pup payments and new cases = ', correlation )
 
 #===================================================================================
 #
@@ -286,9 +286,6 @@ date_list = df_cases_County_cleaned['just_date'].tolist()
 
 pup_date_list = df_pup2['date'].tolist()
 pup_VALUE_list = df_pup2['VALUE'].tolist()
-
-print('pup_date_list', pup_date_list)
-print('pup_VALUE_list', pup_VALUE_list)
 
 # export plot to an image file
 #plt.savefig("Figure-SLI data")
@@ -350,26 +347,34 @@ ax2.annotate('A',  xytext=(1, 50),xy=(20, 75),
              arrowprops=dict(facecolor='blue', shrink=0.05),
              )
 
-
-
+#=================================================
+# plot pup and average of pup
 fig, ax3 = plt.subplots(1, 1, figsize=(10, 5))
-ax3.plot(pup_date_list, pup_VALUE_list, color='tab:green', label="AX3 new cases")
-ax3.set_title("ax3 Plot")
-ax3.set_xlabel("Date" )
+ax3.plot(pup_date_list, pup_VALUE_list, color='tab:green', label="No. people on pup")
+ax3.set_title("Number of people receiving pandemic payments")
+ax3.set_xlabel("Date")
 ax3.set_ylabel("Number of people receiving pandemic payments")
-
-
+ax3.legend()
+#calculate  pup mean
+pup_mean=df_pup2['VALUE'].mean()
+pup_max=df_pup2['VALUE'].max()
+# set start and end points for line, convert date limits to date/number for graph
+px1 = dt.datetime.strptime('2020-01-01','%Y-%m-%d')
+px2 = dt.datetime.strptime('2021-05-01','%Y-%m-%d')
+ax3.hlines(pup_mean, px1, px2, label='ax3 h', ls='--', color='g')
+# draw a line on chart at the mean value slight above the dashed line
+mean_line_text = "Mean no. of people receiving pup = " + str(int(pup_mean))
+ax3.text(px1, pup_mean+10000, mean_line_text)
+# add a text box at the max location
+max_text = "Max = " + str(int(pup_max))
+ax3.text(px1+(px2-px1)/10, pup_max, max_text)
 
 # print header to inspect
 print('df_pup head = \n', df_pup.head())   # view top lines of data
-print('df_pup dtypes = \n', df_pup.dtypes)   # view top lines of data
+print('df_pup dtypes = \n', df_pup.dtypes)   # view data types
 
-df_bar1 = df_pup[df_pup['Sex'].isin(['Female', 'Male']) ]
-
-#count_females = df_bar1['Sex'].count(isin(['female']))
-#print("female", count_females)
-#count_males = df_bar1['Sex'].isin(['male']).count()
-#print('male', count_males)
+df_bar1 = df_pup[df_pup['Sex'].isin(['Female', 'Male'])]
+df_bar1.to_csv(r'export_df_bar1.csv', index=False, header=True)
 
 df_bar1 = (df_bar1.groupby(["Sex"]).sum().sort_values(["VALUE"], ascending=False).rename(columns={"VALUE" : "Sum of Value"}).reset_index())
 fig, ax4 = plt.subplots(1, 1, figsize=(8, 4))
