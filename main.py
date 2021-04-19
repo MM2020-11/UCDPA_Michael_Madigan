@@ -403,7 +403,6 @@ df_bar1 = df_bar1.loc[(df_pup['Sex'] == 'Male') | (df_pup['Sex'] == 'Female'), :
 df_bar1.to_csv(r'export_df_bar1.csv', index=False, header=True)
 
 
-
 df_bar1 = (df_bar1.groupby(["Sex"]).mean().sort_values(["VALUE"], ascending=False).rename(columns={"VALUE": "mean of Value"}).reset_index())
 fig, ax4 = plt.subplots(1, 1, figsize=(8, 4))
 ax4.set_title("Comparison of average male vs female on PUP")
@@ -474,6 +473,33 @@ ax6.set_title("Comparison of age groups on PUP")
 ax6.set_xlabel("Category Age group")
 ax6.set_ylabel("Number of persons")
 ax6.legend()
+
+#==============================================================================
+#  Plot #6 chart pup by age group and sex
+#==============================================================================
+
+
+#Count number of people on 'Persons in receipt of the Pandemic Unemployment Payment'
+df_bar7 = df_pup.loc[df_pup['Statistic'] == 'Persons in receipt of the Pandemic Unemployment Payment', :]
+df_bar7 = df_bar7.loc[df_pup['Age Group'] != 'All ages', :]
+df_bar7 = df_bar7.groupby(['Age Group', 'Sex'], as_index=False)['VALUE'].mean().round(0)
+df_barM = df_bar7.loc[(df_pup['Sex'] == 'Male'), :]
+df_barF = df_bar7.loc[(df_pup['Sex'] == 'Female'), :]
+
+
+df_bar7.to_csv(r'export_df_bar7.csv', index=True, header=True)
+
+fig, ax7 = plt.subplots(figsize=(12, 5))
+b1 = ax7.bar(df_barM['Age Group'], df_barM['VALUE'], color='tab:blue', label="Male")
+b2 = ax7.bar(df_barF['Age Group'], df_barF['VALUE'], color='tab:red', label="Female", bottom=df_barM['VALUE'] )
+ax7.set_title("Comparison of age groups and sex on PUP")
+ax7.set_xlabel("Category Age group")
+ax7.set_ylabel("Number of persons")
+
+ax7.bar_label(b1, label_type='center')
+ax7.bar_label(b2, label_type='center')
+
+ax7.legend()
 
 
 plt.show()
