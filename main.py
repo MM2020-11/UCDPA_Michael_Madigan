@@ -444,8 +444,10 @@ fig.subplots_adjust(bottom=0.5)
 ax5.set_title("Plot 5 Comparison of supports payments")
 ax5.set_xlabel("Government support payments")
 ax5.set_ylabel("Number of people")
+
+ax5.set_xticks((0, 1, 2, 3))
 ax5.set_xticklabels(df_bar2.loc[:, 'Statistic'],  rotation='vertical', size=8)
-print('\n List of statistics = \n', df_bar2.loc[:, 'Statistic'])
+
 # Pad margins so that markers don't get clipped by the axes
 ax5.margins(.1)
 ax5.bar(df_bar2['Statistic'], df_bar2['mean of Value'], color='tab:blue', label="No.People")
@@ -498,9 +500,9 @@ ax7.set_ylabel("Number of persons")
 
 ax7.bar_label(b1, label_type='center')
 ax7.bar_label(b2, label_type='center')
+ax7.bar_label(b2)
 
 ax7.legend()
-
 
 plt.show()
 
