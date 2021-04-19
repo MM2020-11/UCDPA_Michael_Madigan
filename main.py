@@ -287,21 +287,17 @@ date_list = df_cases_County_cleaned['just_date'].tolist()
 pup_date_list = df_pup2['date'].tolist()
 pup_VALUE_list = df_pup2['VALUE'].tolist()
 
-# export plot to an image file
-#plt.savefig("Figure-SLI data")
 
-fig, ax1 = plt.subplots(1,1, figsize=(10, 5))
-ax=fig.add_axes([0,0,1,1])
+fig, ax1 = plt.subplots(1, 1, figsize=(10, 5))
 ax1.set_title("Plot of Irish covid cases compared to Staying Local metric")
 ax1.set_xlabel("Reported dates")
 ax1.set_ylabel('Number of new covid cases')
-ax1.annotate('A',  xytext=(1, 50),xy=(20, 75), arrowprops=dict(facecolor='blue', shrink=0.05))
-
+#ax1.annotate('A',  xytext=(1, 50),xy=(20, 75), arrowprops=dict(facecolor='blue', shrink=0.05))
 
 ax1.plot(date_list, new_cases_list, color='tab:blue', label="new cases")
 #ax1.plot(date_list, Value_list, color='tab:red', label="Staying local")
 #ax1.plot(pup_date_list, pup_VALUE_list, color='tab:red', label="pup")
-#ax1.legend(loc='upper left')  # Improve performance by instructing legend location
+ax1.legend(loc='upper left')  # Improve performance by instructing legend location
 
 # add an arrow annotation to plot
 ax1.annotate('Large spike', xy=(.73, .95),  xycoords='axes fraction',
@@ -313,18 +309,8 @@ ax1.annotate('Large spike', xy=(.73, .95),  xycoords='axes fraction',
 
 ax1a = ax1.twinx()  # instantiate a second axes that shares the same x-axis
 ax1a.plot(date_list, Value_list, color='tab:orange', label="Staying Local")
-
 ax1a.set_ylabel('Percentage of people staying local')
 ax1a.set_ylim(50, 80) # limits set to best present data
-
-ax1b = ax1.twinx()  # instantiate a second axes that shares the same x-axis
-ax1b.plot(pup_date_list, pup_VALUE_list, color='tab:red', label="pup")
-ax1b.set_ylabel('ax1b secondary y label')
-ax1b.set_ylim(0, 2000) # limits set to best present data
-
-
-
-
 
 
 
@@ -335,17 +321,48 @@ ax1b.set_ylim(0, 2000) # limits set to best present data
 # Second plot
 #============================================================================================
 
-ax2 = plt.subplots(1,1)
-ax2 = df_cases_County_cleaned.plot(kind='bar', x='date', y='VALUE')
-ax2.set_xticklabels(df_cases_County_cleaned.index.format(), rotation='vertical', size=6)
-ax2.locator_params(axis='x', nbins=20)
-ax2.set_title("ax2 Plot")
-ax2.set_xlabel("ax2 x label xxxxx")
-ax2.set_ylabel("ax2 y label yyyyy")
 
-ax2.annotate('A',  xytext=(1, 50),xy=(20, 75),
-             arrowprops=dict(facecolor='blue', shrink=0.05),
-             )
+fig, ax2 = plt.subplots(1,1, figsize=(10, 5))
+
+ax2.set_title("Plot of Irish covid cases compared to numbers receiving pup")
+ax2.set_xlabel("Reported dates")
+ax2.set_ylabel('Number of new covid cases')
+ax2.annotate('A',  xytext=(1, 50),xy=(20, 75), arrowprops=dict(facecolor='blue', shrink=0.05))
+
+
+ax2.plot(date_list, new_cases_list, color='tab:blue', label="new cases")
+#ax2.plot(date_list, Value_list, color='tab:red', label="Staying local")
+#ax2.plot(pup_date_list, pup_VALUE_list, color='tab:red', label="pup")
+ax2.legend(loc='upper left')  # Improve performance by instructing legend location
+
+# add an arrow annotation to plot
+ax2.annotate('Large spike', xy=(.73, .95),  xycoords='axes fraction',
+            xytext=(0.54, 0.8), textcoords='axes fraction',
+            arrowprops=dict(facecolor='blue', shrink=0.05),
+            horizontalalignment='right', verticalalignment='top',
+            )
+
+
+ax2b = ax2.twinx()  # instantiate a second axes that shares the same x-axis
+ax2b.plot(pup_date_list, pup_VALUE_list, color='tab:red', label="pup")
+ax2b.set_ylabel('No people receiving pandemic payments')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #=================================================
 # plot pup and average of pup
@@ -445,34 +462,13 @@ df_bar6 = df_bar6.loc[(df_pup['Sex'] == 'Both sexes'), :]
 df_bar6 = df_bar6.groupby('Age Group', as_index=False)['VALUE'].mean()
 df_bar6.to_csv(r'export_df_bar6.csv', index=True, header=True)
 
-fig, ax6 = plt.subplots(1, 1, figsize=(8, 4))
+fig, ax6 = plt.subplots(figsize=(12, 5))
+rects1 = ax6.bar(df_bar6['Age Group'], df_bar6['VALUE'], color='tab:orange', label="PUP average of Age groups")
+
 ax6.set_title("Comparison of age groups on PUP")
 ax6.set_xlabel("Category Age group")
 ax6.set_ylabel("Number of persons")
-
-#ax6.bar(df_bar6['Age Group'], df_bar6['mean of Value'], color='tab:blue', label="PUP average of Age groups")
-ax6.bar(df_bar6['Age Group'], df_bar6['VALUE'], color='tab:blue', label="PUP average of Age groups")
-
-For rx = 0
-mean_age_group = df_bar6.iloc[2, 0]
-print('\n mean_age_group = ', mean_age_group)
-
-
-
-# add numerical data half way up bar
-#ax4.text(-0.1, mean_males/2, int(mean_males), style='italic', bbox={'facecolor': 'green', 'alpha': 0.1, 'pad': 8})
-
-# add numerical data half way up bar
-#ax4.text(.9, mean_females/2, int(mean_females), style='italic', bbox={'facecolor': 'green', 'alpha': 0.1, 'pad': 8})
-
-#Ratio_M_F = mean_males /    mean_females
-#print("%.2f" % Ratio_M_F)
-#Ratio_M_F_text = "Ratio Male/Female = " + ("%.2f" % Ratio_M_F)
-
-# add numerical data above the female bar
-#ax4.text(.73, mean_females + 30000, Ratio_M_F_text, style='italic', bbox={'facecolor': 'green', 'alpha': 0.1, 'pad': 8})
-
-
+ax6.legend()
 
 
 plt.show()
