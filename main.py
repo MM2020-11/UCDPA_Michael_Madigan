@@ -367,7 +367,6 @@ ax2.vlines(px3, 100,8000, label='ax2 h', ls='--', color='g')
 line_text3 = " Christmas bounce"
 ax2.text(px3, 50, line_text3)
 
-
 #=================================================
 # plot 3
 #=================================================
@@ -395,8 +394,10 @@ ax3.text(px1+(px2-px1)/10, pup_max, max_text)
 # print header to inspect
 print('df_pup head = \n', df_pup.head())   # view top lines of data
 print('df_pup dtypes = \n', df_pup.dtypes)   # view data types
-
+#=====================================================================================
+# plot 4 bar plot
 #count number of people on 'Persons in receipt of the Pandemic Unemployment Payment'
+#====================================================================================
 df_bar1 = df_pup.loc[df_pup['Statistic'] == 'Persons in receipt of the Pandemic Unemployment Payment', :]
 df_bar1 = df_bar1.loc[df_pup['Age Group'] == 'All ages', :]
 df_bar1 = df_bar1.loc[(df_pup['Sex'] == 'Male') | (df_pup['Sex'] == 'Female'), :]
@@ -434,9 +435,11 @@ Ratio_M_F_text = "Ratio Male/Female = " + ("%.2f" % Ratio_M_F)
 ax4.text(.73, mean_females + 30000, Ratio_M_F_text, style='italic',
         bbox={'facecolor': 'green', 'alpha': 0.1, 'pad': 8})
 
+#===============================================================================================================
+# plot 5
+#
+#===============================================================================================================
 
-
-#df_bar2 = (df_pup.groupby(["Statistic"]).mean().sort_values(["VALUE"], ascending=False).rename(columns={"VALUE" : "Sum of Value"}).reset_index())
 df_bar2 = (df_pup.groupby(["Statistic"]).mean().sort_values(["VALUE"], ascending=False).rename(columns={"VALUE" : "mean of Value"}).reset_index())
 
 fig, ax5 = plt.subplots( figsize=(7, 8))
@@ -455,7 +458,7 @@ ax5.legend()
 
 
 #==============================================================================
-#  Plot #5 chart pup by age group
+#  Plot #6 chart pup by age group
 #==============================================================================
 
 
@@ -477,7 +480,8 @@ ax6.set_ylabel("Number of persons")
 ax6.legend()
 
 #==============================================================================
-#  Plot #6 chart pup by age group and sex
+#  Plot #7 chart pup by age group and sex
+#  eventually getting the hang of O.O. Matplotlib :-)
 #==============================================================================
 
 
@@ -485,10 +489,10 @@ ax6.legend()
 df_bar7 = df_pup.loc[df_pup['Statistic'] == 'Persons in receipt of the Pandemic Unemployment Payment', :]
 df_bar7 = df_bar7.loc[df_pup['Age Group'] != 'All ages', :]
 df_bar7 = df_bar7.groupby(['Age Group', 'Sex'], as_index=False)['VALUE'].mean().round(0)
-df_barM = df_bar7.loc[(df_pup['Sex'] == 'Male'), :]
-df_barF = df_bar7.loc[(df_pup['Sex'] == 'Female'), :]
+df_barM = df_bar7.loc[(df_bar7['Sex'] == 'Male'), :].reset_index(drop=True)
+df_barF = df_bar7.loc[(df_bar7['Sex'] == 'Female'), :].reset_index(drop=True)
 
-
+# save file for debugging
 df_bar7.to_csv(r'export_df_bar7.csv', index=True, header=True)
 
 fig, ax7 = plt.subplots(figsize=(12, 5))
@@ -501,8 +505,35 @@ ax7.set_ylabel("Number of persons")
 ax7.bar_label(b1, label_type='center')
 ax7.bar_label(b2, label_type='center')
 ax7.bar_label(b2)
-
 ax7.legend()
+
+# Create a df to hold ratios
+#df_ratio = pd.DataFrame(data={'Age Group':[1, 2, 3, 4, 5, 6, 7], 'ratio':[1, 2, 3, 4, 5, 6, 7]})
+df_ratio = df_barM
+df_ratio['ratio'] = df_barF['VALUE']/(df_barM['VALUE'])
+df_ratio = df_ratio[['Age Group', 'ratio']]
+#df_ratio['ratio_txt'] = df_ratio['Age Group'] + df_ratio['ratio'].round(3).astype(str)
+
+
+#props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+
+#ax7.text(0.65, 0.75, 'textstr', transform=ax7.transAxes, fontsize=12,
+#         verticalalignment='top', bbox=props)
+
+text_ratios =''
+for index, row in df_ratio.iterrows():
+    text_ratios = df_ratio.iloc[index:1] #+ text_ratios
+    #print(index)
+    print(text_ratios)
+
+#print(df_ratio)
+
+
+
+
 
 plt.show()
 
+#=======================================================================
+# end of file
+#=======================================================================
