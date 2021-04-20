@@ -508,25 +508,11 @@ ax7.bar_label(b2)
 ax7.legend()
 
 # Create a df to hold ratios
-#df_ratio = pd.DataFrame(data={'Age Group':[1, 2, 3, 4, 5, 6, 7], 'ratio':[1, 2, 3, 4, 5, 6, 7]})
 df_ratio = df_barM
 df_ratio['ratio'] = df_barF['VALUE']/(df_barM['VALUE'])
 df_ratio = df_ratio[['Age Group', 'ratio']]
-#df_ratio['ratio_txt'] = df_ratio['Age Group'] + df_ratio['ratio'].round(3).astype(str)
 
-
-#props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-
-#ax7.text(0.65, 0.75, 'textstr', transform=ax7.transAxes, fontsize=12,
-#         verticalalignment='top', bbox=props)
-
-text_ratios =''
-for index, row in df_ratio.iterrows():
-    text_ratios = df_ratio.iloc[index:1] #+ text_ratios
-    #print(index)
-    print(text_ratios)
-
-#print(df_ratio)
+print(df_ratio)
 
 
 
