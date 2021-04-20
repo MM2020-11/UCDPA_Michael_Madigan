@@ -512,9 +512,23 @@ df_ratio = df_barM
 df_ratio['ratio'] = df_barF['VALUE']/(df_barM['VALUE'])
 df_ratio = df_ratio[['Age Group', 'ratio']]
 
-print(df_ratio)
 
+# Add a box in bar plot with ratios for more detailed review
+textstr="Age group         Female/Male Ratio"
 
+for index, row in df_ratio.iterrows():     # need to program this repeating action :-)
+    textstr = '\n'.join((
+        textstr,
+        df_ratio.iloc[index, 0] + "  " + str(df_ratio.iloc[index, 1].round(2)),
+    ))
+    print('index = ', index)
+
+# these are matplotlib.patch.Patch properties
+props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+
+# place a text box in spare space
+ax7.text(0.7, 0.8, textstr, transform=ax7.transAxes, fontsize=10,
+        verticalalignment='top', bbox=props)
 
 
 
